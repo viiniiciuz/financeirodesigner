@@ -119,7 +119,7 @@ function TrabalhoForm({ userId, item, empresas, onClose, onSave }) {
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button onClick={() => { if (!f.empresa_id || !f.servico || !f.valor) { alert("Preencha empresa, serviço e valor."); return; } onSave(f); }}>Salvar</Button>
+        <Button onClick={() => onSave({ ...f, empresa_id: f.empresa_id || null, valor: Number(f.valor) || 0 })}>Salvar</Button>
       </div>
     </Modal>
   );

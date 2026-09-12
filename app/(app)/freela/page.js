@@ -135,7 +135,7 @@ function DemandaForm({ item, clientes, onClose, onSave }) {
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button onClick={() => { if (!f.cliente || !f.valor_total) { alert("Preencha cliente e valor total."); return; } onSave(f, isNew ? { valor: Number(entradaValor) || 0, forma: entradaForma } : null); }}>Salvar</Button>
+        <Button onClick={() => { onSave({ ...f, valor_total: Number(f.valor_total) || 0 }, isNew ? { valor: Number(entradaValor) || 0, forma: entradaForma } : null); }}>Salvar</Button>
       </div>
     </Modal>
   );
@@ -207,7 +207,7 @@ function AddPagamentoForm({ userId, onSave, onCancel }) {
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 12 }}>
         <Button variant="secondary" size="sm" onClick={onCancel}>Cancelar</Button>
-        <Button size="sm" onClick={() => { if (!valor) { alert("Informe o valor."); return; } onSave({ valor: Number(valor), data: dataP, forma, descricao, comprovante_url: file?.signedUrl || null, comprovante_path: file?.path || null }); }}>Salvar pagamento</Button>
+        <Button size="sm" onClick={() => onSave({ valor: Number(valor) || 0, data: dataP, forma, descricao, comprovante_url: file?.signedUrl || null, comprovante_path: file?.path || null })}>Salvar pagamento</Button>
       </div>
     </div>
   );

@@ -102,7 +102,7 @@ function EmpresaForm({ item, onClose, onSave }) {
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button onClick={() => { if (!f.nome) { alert("Informe o nome."); return; } onSave({ ...f, cor: f.cor || colorForName(f.nome) }); }}>Salvar</Button>
+        <Button onClick={() => onSave({ ...f, cor: f.cor || colorForName(f.nome || "empresa") })}>Salvar</Button>
       </div>
     </Modal>
   );

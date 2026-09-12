@@ -162,7 +162,7 @@ function AddTarefaModal({ empresas, onClose, onSave }) {
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button onClick={() => { if (!desc) { alert("Descreva a tarefa."); return; } onSave({ descricao: desc, vinculo_tipo: vinculoTipo === "nenhum" ? null : vinculoTipo, vinculo_id: vinculoTipo === "empresa" ? vinculoId : null, vinculo_texto: vinculoTipo === "cliente" ? vinculoTexto : null, prioridade, concluida: false }); }}>Adicionar</Button>
+        <Button onClick={() => onSave({ descricao: desc, vinculo_tipo: vinculoTipo === "nenhum" ? null : vinculoTipo, vinculo_id: vinculoTipo === "empresa" ? vinculoId : null, vinculo_texto: vinculoTipo === "cliente" ? vinculoTexto : null, prioridade, concluida: false })}>Adicionar</Button>
       </div>
     </Modal>
   );

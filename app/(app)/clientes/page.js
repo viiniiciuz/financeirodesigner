@@ -74,10 +74,12 @@ export default function ClientesPage() {
                   {c.whatsapp && <div>📱 {c.whatsapp}</div>}
                   {c.email && <div>✉️ {c.email}</div>}
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: 8, marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border)" }}>
-                  <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Serviços</div><div style={{ fontWeight: 700, fontSize: 13, overflowWrap: "break-word" }}>{servicos.length}</div></div>
-                  <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Contratado</div><div style={{ fontWeight: 700, fontSize: 13, overflowWrap: "break-word" }}>{toBRL(totalContratado)}</div></div>
-                  <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Pendente</div><div style={{ fontWeight: 700, fontSize: 13, color: "#F59E0B", overflowWrap: "break-word" }}>{toBRL(totalContratado - totalRecebido)}</div></div>
+                <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border)" }}>
+                  <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6 }}>Serviços: <span style={{ color: "var(--text)", fontWeight: 700 }}>{servicos.length}</span></div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Contratado</div><div style={{ fontWeight: 700, fontSize: 13, whiteSpace: "nowrap" }}>{toBRL(totalContratado)}</div></div>
+                    <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Pendente</div><div style={{ fontWeight: 700, fontSize: 13, color: "#F59E0B", whiteSpace: "nowrap" }}>{toBRL(totalContratado - totalRecebido)}</div></div>
+                  </div>
                 </div>
               </Card>
             );
@@ -102,7 +104,7 @@ function ClienteForm({ item, onClose, onSave }) {
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button onClick={() => { if (!f.nome) { alert("Informe o nome."); return; } onSave(f); }}>Salvar</Button>
+        <Button onClick={() => onSave(f)}>Salvar</Button>
       </div>
     </Modal>
   );
