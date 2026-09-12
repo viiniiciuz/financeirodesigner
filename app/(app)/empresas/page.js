@@ -28,8 +28,17 @@ export default function EmpresasPage() {
 
   const save = async (item) => {
     const payload = { ...item, user_id: userId };
-    if (item.id) await supabase.from("empresas").update(payload).eq("id", item.id);
-    else { delete payload.id; await supabase.from("empresas").insert(payload); }
+    if (item.id) {
+      await supabase.from("empresas").update(payload).eq("id", item.id);
+    } else {
+      delete payload.id;
+      await supabase.from("empresas").insert(payload);
+      // sincroniza: se ainda não existir um cliente com esse nome, cria um também
+      const { data: existente } = await supabase.from("clientes").select("id").eq("nome", item.nome).maybeSingle();
+      if (!existente) {
+        await supabase.from("clientes").insert({ nome: item.nome, user_id: userId });
+      }
+    }
     setModal(null);
     load();
   };

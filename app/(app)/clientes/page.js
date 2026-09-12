@@ -4,7 +4,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { Button, Card, EmptyState, IconBtn, Modal, Field, Input } from "@/components/ui";
-import { toBRL, sumPagamentos } from "@/lib/helpers";
+import { toBRL, sumPagamentos, colorForName } from "@/lib/helpers";
 
 export default function ClientesPage() {
   const { userId } = useAuth();
@@ -29,8 +29,17 @@ export default function ClientesPage() {
 
   const save = async (item) => {
     const payload = { ...item, user_id: userId };
-    if (item.id) await supabase.from("clientes").update(payload).eq("id", item.id);
-    else { delete payload.id; await supabase.from("clientes").insert(payload); }
+    if (item.id) {
+      await supabase.from("clientes").update(payload).eq("id", item.id);
+    } else {
+      delete payload.id;
+      await supabase.from("clientes").insert(payload);
+      // sincroniza: se ainda não existir uma empresa com esse nome, cria uma também
+      const { data: existente } = await supabase.from("empresas").select("id").eq("nome", item.nome).maybeSingle();
+      if (!existente) {
+        await supabase.from("empresas").insert({ nome: item.nome, cor: colorForName(item.nome), tipo_contratacao: "Demanda", ativo: true, user_id: userId });
+      }
+    }
     setModal(null); load();
   };
   const remove = async (id) => { if (!confirm("Excluir este cliente?")) return; await supabase.from("clientes").delete().eq("id", id); load(); };
@@ -65,10 +74,10 @@ export default function ClientesPage() {
                   {c.whatsapp && <div>📱 {c.whatsapp}</div>}
                   {c.email && <div>✉️ {c.email}</div>}
                 </div>
-                <div style={{ display: "flex", gap: 16, marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border)" }}>
-                  <div><div style={{ fontSize: 11, color: "var(--muted)" }}>Serviços</div><div style={{ fontWeight: 700 }}>{servicos.length}</div></div>
-                  <div><div style={{ fontSize: 11, color: "var(--muted)" }}>Contratado</div><div style={{ fontWeight: 700 }}>{toBRL(totalContratado)}</div></div>
-                  <div><div style={{ fontSize: 11, color: "var(--muted)" }}>Pendente</div><div style={{ fontWeight: 700, color: "#F59E0B" }}>{toBRL(totalContratado - totalRecebido)}</div></div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: 8, marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border)" }}>
+                  <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Serviços</div><div style={{ fontWeight: 700, fontSize: 13, overflowWrap: "break-word" }}>{servicos.length}</div></div>
+                  <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Contratado</div><div style={{ fontWeight: 700, fontSize: 13, overflowWrap: "break-word" }}>{toBRL(totalContratado)}</div></div>
+                  <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Pendente</div><div style={{ fontWeight: 700, fontSize: 13, color: "#F59E0B", overflowWrap: "break-word" }}>{toBRL(totalContratado - totalRecebido)}</div></div>
                 </div>
               </Card>
             );
