@@ -4,7 +4,7 @@ import { Plus, Check, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { Button, Card, EmptyState, IconBtn, Tag, Badge, Modal, Field, Input, Select, ProgressBar } from "@/components/ui";
-import { PRIORIDADES, toBRDate, todayISO } from "@/lib/helpers";
+import { PRIORIDADES, toBRDate, todayISO, limparVazios } from "@/lib/helpers";
 
 export default function DemandasPage() {
   const { userId } = useAuth();
@@ -46,11 +46,11 @@ export default function DemandasPage() {
     return true;
   });
 
-  const criarLista = async (lista) => { await supabase.from("listas_demandas").insert({ ...lista, user_id: userId }); setNovaListaOpen(false); load(); };
+  const criarLista = async (lista) => { const { error } = await supabase.from("listas_demandas").insert(limparVazios({ ...lista, user_id: userId })); if (error) { alert("Não foi possível salvar: " + error.message); return; } setNovaListaOpen(false); load(); };
   const removerLista = async (id) => { if (!confirm("Excluir esta lista?")) return; await supabase.from("listas_demandas").delete().eq("id", id); load(); };
   const toggleTarefa = async (t) => { await supabase.from("tarefas").update({ concluida: !t.concluida }).eq("id", t.id); load(); };
   const removerTarefa = async (id) => { await supabase.from("tarefas").delete().eq("id", id); load(); };
-  const addTarefa = async (t) => { await supabase.from("tarefas").insert({ ...t, lista_id: addTarefaFor, user_id: userId }); setAddTarefaFor(null); load(); };
+  const addTarefa = async (t) => { const { error } = await supabase.from("tarefas").insert(limparVazios({ ...t, lista_id: addTarefaFor, user_id: userId })); if (error) { alert("Não foi possível salvar: " + error.message); return; } setAddTarefaFor(null); load(); };
 
   return (
     <div>

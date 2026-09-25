@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, Check } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
-import { uploadArquivo } from "@/lib/storage";
-import { Button, Card, EmptyState, IconBtn, Tag, Badge, Modal, Field, Input, Select, TextArea, CurrencyInput, FileField } from "@/components/ui";
-import { FORMAS_PAGAMENTO, STATUS_TRABALHO, STATUS_FIN, toBRL, toBRDate, todayISO, statusFinanceiroEmpresa, MESES_ABREV } from "@/lib/helpers";
+import { Button, Card, EmptyState, IconBtn, Tag, Badge, Modal, Field, Input, Select, TextArea, CurrencyInput } from "@/components/ui";
+import { FORMAS_PAGAMENTO, STATUS_TRABALHO, STATUS_FIN, toBRL, toBRDate, todayISO, statusFinanceiroEmpresa, MESES_ABREV, limparVazios } from "@/lib/helpers";
 
 export default function TrabalhosEmpresaPage() {
   const { userId } = useAuth();
@@ -28,9 +27,11 @@ export default function TrabalhosEmpresaPage() {
   const empresasMap = Object.fromEntries(empresas.map((e) => [e.id, e]));
 
   const saveItem = async (item) => {
-    const payload = { ...item, user_id: userId };
-    if (item.id) await supabase.from("trabalhos_empresa").update(payload).eq("id", item.id);
-    else { delete payload.id; await supabase.from("trabalhos_empresa").insert(payload); }
+    const payload = limparVazios({ ...item, user_id: userId }, ["valor"]);
+    let error;
+    if (item.id) ({ error } = await supabase.from("trabalhos_empresa").update(payload).eq("id", item.id));
+    else { delete payload.id; ({ error } = await supabase.from("trabalhos_empresa").insert(payload)); }
+    if (error) { alert("Não foi possível salvar: " + error.message); return; }
     setModal(null); load();
   };
   const removeItem = async (id) => { if (!confirm("Excluir este trabalho?")) return; await supabase.from("trabalhos_empresa").delete().eq("id", id); load(); };
@@ -82,13 +83,9 @@ export default function TrabalhosEmpresaPage() {
 }
 
 function TrabalhoForm({ userId, item, empresas, onClose, onSave }) {
-  const [f, setF] = useState({ empresa_id: empresas[0]?.id || "", servico: "", descricao: "", data: todayISO(), mes_referencia: todayISO().slice(0, 7) + "-01", valor: "", data_prevista_pagamento: "", status: "em_andamento", observacoes: "", pago: false, data_pagamento: "", forma_pagamento: FORMAS_PAGAMENTO[0], nf_numero: "", nf_data_emissao: "", nf_arquivo_url: null, nf_arquivo_path: null, comprovante_url: null, comprovante_path: null, ...item });
-  const [uploadingNf, setUploadingNf] = useState(false);
-  const [uploadingComp, setUploadingComp] = useState(false);
+  const [f, setF] = useState({ empresa_id: empresas[0]?.id || "", servico: "", descricao: "", data: todayISO(), mes_referencia: todayISO().slice(0, 7) + "-01", valor: "", data_prevista_pagamento: "", status: "em_andamento", observacoes: "", pago: false, data_pagamento: "", forma_pagamento: FORMAS_PAGAMENTO[0], nf_numero: "", nf_data_emissao: "", ...item });
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
 
-  const uploadNf = async (file) => { setUploadingNf(true); try { const r = await uploadArquivo(userId, file); set("nf_arquivo_url", r.signedUrl); set("nf_arquivo_path", r.path); } catch (e) { alert(e.message); } setUploadingNf(false); };
-  const uploadComp = async (file) => { setUploadingComp(true); try { const r = await uploadArquivo(userId, file); set("comprovante_url", r.signedUrl); set("comprovante_path", r.path); } catch (e) { alert(e.message); } setUploadingComp(false); };
 
   return (
     <Modal title={item.id ? "Editar trabalho" : "Novo trabalho de empresa"} onClose={onClose}>
@@ -107,13 +104,11 @@ function TrabalhoForm({ userId, item, empresas, onClose, onSave }) {
           <Field label="Forma de pagamento"><Select value={f.forma_pagamento} onChange={(e) => set("forma_pagamento", e.target.value)}>{FORMAS_PAGAMENTO.map((x) => <option key={x} value={x}>{x}</option>)}</Select></Field>
         </>}
         <Field label="Observações" full><TextArea value={f.observacoes || ""} onChange={(e) => set("observacoes", e.target.value)} /></Field>
-        <FileField label="Comprovante" fileUrl={f.comprovante_url} fileName="comprovante" uploading={uploadingComp} onUpload={uploadComp} onRemove={() => { set("comprovante_url", null); set("comprovante_path", null); }} />
         <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--border)", paddingTop: 12, marginTop: 4 }}>
           <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 10 }}>Nota fiscal</div>
           <div className="form-grid">
             <Field label="Número da NF"><Input value={f.nf_numero || ""} onChange={(e) => set("nf_numero", e.target.value)} /></Field>
             <Field label="Data de emissão"><Input type="date" value={f.nf_data_emissao || ""} onChange={(e) => set("nf_data_emissao", e.target.value)} /></Field>
-            <FileField label="Arquivo PDF" fileUrl={f.nf_arquivo_url} fileName="nota fiscal" uploading={uploadingNf} onUpload={uploadNf} onRemove={() => { set("nf_arquivo_url", null); set("nf_arquivo_path", null); }} />
           </div>
         </div>
       </div>

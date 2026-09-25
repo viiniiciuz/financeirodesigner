@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { uploadArquivo, removeArquivo } from "@/lib/storage";
 import { Button, Card, EmptyState, IconBtn, Badge, Modal, Field, Input, Select, TextArea, CurrencyInput, StatCard, FileField } from "@/components/ui";
-import { SERVICO_TIPOS, FORMAS_PAGAMENTO, STATUS_TRABALHO, STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela } from "@/lib/helpers";
+import { SERVICO_TIPOS, FORMAS_PAGAMENTO, STATUS_TRABALHO, STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, limparVazios } from "@/lib/helpers";
 
 export default function FreelaPage() {
   const { userId } = useAuth();
@@ -32,17 +32,19 @@ export default function FreelaPage() {
   const pagamentosDe = (demandaId) => pagamentos.filter((p) => p.demanda_id === demandaId);
 
   const saveItem = async (item, entrada) => {
-    const payload = { ...item, user_id: userId };
+    const payload = limparVazios({ ...item, user_id: userId }, ["valor_total"]);
     let demandaId = item.id;
-    if (item.id) { await supabase.from("demandas_freela").update(payload).eq("id", item.id); }
-    else {
+    if (item.id) {
+      const { error } = await supabase.from("demandas_freela").update(payload).eq("id", item.id);
+      if (error) { alert("Não foi possível salvar: " + error.message); return; }
+    } else {
       delete payload.id;
       const { data, error } = await supabase.from("demandas_freela").insert(payload).select().single();
-      if (error) { alert("Erro ao salvar: " + error.message); return; }
+      if (error) { alert("Não foi possível salvar: " + error.message); return; }
       demandaId = data.id;
     }
     if (entrada && entrada.valor > 0) {
-      await supabase.from("pagamentos_freela").insert({ demanda_id: demandaId, user_id: userId, valor: entrada.valor, data: item.data_contratacao, forma: entrada.forma, descricao: "Entrada / início" });
+      await supabase.from("pagamentos_freela").insert({ demanda_id: demandaId, user_id: userId, valor: entrada.valor, data: item.data_contratacao || todayISO(), forma: entrada.forma, descricao: "Entrada / início" });
     }
     setModal(null); load();
   };
@@ -147,7 +149,8 @@ function PagamentosModal({ userId, item, pagamentos, onClose, onChange }) {
   const rest = Math.max(0, Number(item.valor_total) - rec);
 
   const addPagamento = async (p) => {
-    await supabase.from("pagamentos_freela").insert({ demanda_id: item.id, user_id: userId, ...p });
+    const { error } = await supabase.from("pagamentos_freela").insert(limparVazios({ demanda_id: item.id, user_id: userId, ...p }, ["valor"]));
+    if (error) { alert("Não foi possível salvar o pagamento: " + error.message); return; }
     setShowAdd(false); onChange();
   };
   const removePagamento = async (p) => { if (p.comprovante_path) await removeArquivo(p.comprovante_path); await supabase.from("pagamentos_freela").delete().eq("id", p.id); onChange(); };

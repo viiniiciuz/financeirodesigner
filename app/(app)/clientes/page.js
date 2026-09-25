@@ -4,7 +4,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { Button, Card, EmptyState, IconBtn, Modal, Field, Input } from "@/components/ui";
-import { toBRL, sumPagamentos, colorForName } from "@/lib/helpers";
+import { toBRL, sumPagamentos, colorForName, limparVazios } from "@/lib/helpers";
 
 export default function ClientesPage() {
   const { userId } = useAuth();
@@ -28,12 +28,14 @@ export default function ClientesPage() {
   }
 
   const save = async (item) => {
-    const payload = { ...item, user_id: userId };
+    const payload = limparVazios({ ...item, user_id: userId });
     if (item.id) {
-      await supabase.from("clientes").update(payload).eq("id", item.id);
+      const { error } = await supabase.from("clientes").update(payload).eq("id", item.id);
+      if (error) { alert("Não foi possível salvar: " + error.message); return; }
     } else {
       delete payload.id;
-      await supabase.from("clientes").insert(payload);
+      const { error } = await supabase.from("clientes").insert(payload);
+      if (error) { alert("Não foi possível salvar: " + error.message); return; }
       // sincroniza: se ainda não existir uma empresa com esse nome, cria uma também
       const { data: existente } = await supabase.from("empresas").select("id").eq("nome", item.nome).maybeSingle();
       if (!existente) {

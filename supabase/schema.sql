@@ -70,6 +70,7 @@ create table if not exists public.pagamentos_freela (
   forma text,
   descricao text,
   comprovante_url text,
+  comprovante_path text,
   created_at timestamptz default now()
 );
 
@@ -92,7 +93,9 @@ create table if not exists public.trabalhos_empresa (
   nf_numero text,
   nf_data_emissao date,
   nf_arquivo_url text,
+  nf_arquivo_path text,
   comprovante_url text,
+  comprovante_path text,
   created_at timestamptz default now()
 );
 
