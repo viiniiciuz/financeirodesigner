@@ -21,6 +21,7 @@ export default function DemandasPage() {
 
   async function load() {
     setLoading(true);
+    await rolarPendentes();
     const [{ data: l }, { data: t }, { data: e }] = await Promise.all([
       supabase.from("listas_demandas").select("*").order("data", { ascending: false }),
       supabase.from("tarefas").select("*"),
@@ -28,6 +29,37 @@ export default function DemandasPage() {
     ]);
     setListas(l || []); setTarefas(t || []); setEmpresas(e || []);
     setLoading(false);
+  }
+
+  // Migra automaticamente tarefas não concluídas de dias passados para a lista de hoje.
+  // Só some da lista antiga quando a tarefa é marcada como concluída.
+  async function rolarPendentes() {
+    const today = todayISO();
+    const { data: listasAntigas } = await supabase.from("listas_demandas").select("id, data").lt("data", today);
+    if (!listasAntigas || listasAntigas.length === 0) return;
+
+    const idsAntigos = listasAntigas.map((l) => l.id);
+    const { data: pendentes } = await supabase.from("tarefas").select("id, lista_id").in("lista_id", idsAntigos).eq("concluida", false);
+    if (!pendentes || pendentes.length === 0) return;
+
+    // garante que existe uma lista de hoje
+    const { data: listasHoje } = await supabase.from("listas_demandas").select("id").eq("data", today).order("created_at", { ascending: true }).limit(1);
+    let listaHojeId = listasHoje?.[0]?.id;
+    if (!listaHojeId) {
+      const { data: nova } = await supabase.from("listas_demandas").insert({ user_id: userId, titulo: `Demandas de ${toBRDate(today)}`, data: today }).select().single();
+      listaHojeId = nova?.id;
+    }
+    if (!listaHojeId) return;
+
+    // move as tarefas pendentes para a lista de hoje
+    const idsPendentes = pendentes.map((p) => p.id);
+    await supabase.from("tarefas").update({ lista_id: listaHojeId }).in("id", idsPendentes);
+
+    // remove listas antigas que ficaram vazias (todas as tarefas eram pendentes e foram movidas)
+    for (const listaAntiga of listasAntigas) {
+      const { count } = await supabase.from("tarefas").select("id", { count: "exact", head: true }).eq("lista_id", listaAntiga.id);
+      if (!count) await supabase.from("listas_demandas").delete().eq("id", listaAntiga.id);
+    }
   }
   const empresasMap = Object.fromEntries(empresas.map((e) => [e.id, e]));
   const tarefasDe = (listaId) => tarefas.filter((t) => t.lista_id === listaId);
