@@ -1,30 +1,31 @@
 "use client";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Settings, Menu, Building, LogOut, FolderKanban, ChevronDown } from "lucide-react";
+import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Settings, Menu, Building, LogOut, FolderKanban, FileSignature } from "lucide-react";
 import { ThemeToggle } from "@/components/ui";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 
 const LOGO_SRC = "/logo.svg";
 
-const NAV = [
+const TOPO = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { label: "Trabalho", icon: FolderKanban, children: [
+  { href: "/clientes", label: "Clientes", icon: Users },
+  { href: "/empresas", label: "Empresas", icon: Building },
+  { href: "/pagamentos", label: "Pagamentos", icon: Wallet },
+];
+const SECOES = [
+  { label: "Trabalho", icon: FolderKanban, itens: [
     { href: "/demandas", label: "Demandas", icon: ListChecks },
     { href: "/freela", label: "Demandas Freela", icon: Briefcase },
     { href: "/trabalhos-empresa", label: "Trabalhos de Empresa", icon: Building2 },
   ] },
-  { href: "/clientes", label: "Clientes", icon: Users },
-  { href: "/empresas", label: "Empresas", icon: Building },
-  { href: "/pagamentos", label: "Pagamentos", icon: Wallet },
-  { href: "/configuracoes", label: "Configurações", icon: Settings },
+  { label: "Contrato", icon: FileSignature, itens: [] },
 ];
 
 export default function AppLayout({ children }) {
   const { loading, session } = useAuth();
   const [open, setOpen] = useState(false);
-  const [trabalhoAberto, setTrabalhoAberto] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -38,33 +39,31 @@ export default function AppLayout({ children }) {
       {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
       <div className={`sidebar ${open ? "open" : ""}`}>
         <div className="brand">
-          <img className="logo-dark" src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 190, height: "auto" }} />
-          <img className="logo-light" src="/logo-light.svg" alt="Zentrix Flow" style={{ width: 190, height: "auto" }} />
+          <img className="logo-dark" src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 140, height: "auto" }} />
+          <img className="logo-light" src="/logo-light.svg" alt="Zentrix Flow" style={{ width: 140, height: "auto" }} />
         </div>
         <div className="nav">
-          {NAV.map((n) => n.children ? (
-            <div key={n.label}>
-              <button className="nav-item" style={{ width: "100%", color: n.children.some((c) => c.href === pathname) ? "var(--text)" : undefined }} onClick={() => setTrabalhoAberto((v) => !v)}>
-                <n.icon size={16} /> <span style={{ flex: 1 }}>{n.label}</span>
-                <ChevronDown size={15} style={{ transition: "transform .15s ease", transform: trabalhoAberto ? "none" : "rotate(-90deg)" }} />
-              </button>
-              {trabalhoAberto && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 4, margin: "4px 0 4px 14px", paddingLeft: 8, borderLeft: "1px solid var(--border)" }}>
-                  {n.children.map((c) => (
-                    <a key={c.href} href={c.href} className={`nav-item ${pathname === c.href ? "active" : ""}`} onClick={() => setOpen(false)}>
-                      <c.icon size={16} /> <span>{c.label}</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
+          {TOPO.map((n) => (
             <a key={n.href} href={n.href} className={`nav-item ${pathname === n.href ? "active" : ""}`} onClick={() => setOpen(false)}>
               <n.icon size={16} /> <span>{n.label}</span>
             </a>
           ))}
+          {SECOES.map((s) => (
+            <div key={s.label}>
+              <div className="nav-section"><s.icon size={13} /><span>{s.label}</span><i /></div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {s.itens.map((c) => (
+                  <a key={c.href} href={c.href} className={`nav-item ${pathname === c.href ? "active" : ""}`} onClick={() => setOpen(false)}>
+                    <c.icon size={16} /> <span>{c.label}</span>
+                  </a>
+                ))}
+                {s.itens.length === 0 && <div style={{ fontSize: 12, color: "var(--muted)", padding: "4px 14px 8px" }}>Em breve: modelos de contrato</div>}
+              </div>
+            </div>
+          ))}
         </div>
         <div className="sidebar-foot">
+          <a href="/configuracoes" className={`nav-item ${pathname === "/configuracoes" ? "active" : ""}`} onClick={() => setOpen(false)}><Settings size={16} /> <span>Configurações</span></a>
           <button onClick={logout} className="nav-item" style={{ width: "100%" }}><LogOut size={16} /> <span>Sair</span></button>
         </div>
       </div>

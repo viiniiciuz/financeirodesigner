@@ -87,7 +87,7 @@ export default function ListaDoDia() {
   return (
     <div>
       <div className="section-head">
-        <div className="section-title" style={{ fontSize: 19 }}>Lista do dia</div>
+        <div className="section-title">Demandas</div>
         <Button onClick={() => setNovaListaOpen(true)}><Plus size={14} /> Nova lista</Button>
       </div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>

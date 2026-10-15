@@ -53,7 +53,7 @@ function Checklist({ value, onChange }) {
   );
 }
 
-function CardModal({ item, novoStatus, pagamentos, onClose, onSave, onDelete }) {
+function CardModal({ item, novoStatus, pagamentos, onClose, onSave, onDelete, onAbrirLista }) {
   const freela = item?.tipo === "freela";
   const raw = item?.raw;
   const [f, setF] = useState(() =>
@@ -80,9 +80,9 @@ function CardModal({ item, novoStatus, pagamentos, onClose, onSave, onDelete }) 
               </div>
             </div>
             {raw.descricao && <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 10 }}>{raw.descricao}</div>}
-            <a href="/freela" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, marginTop: 10, color: "var(--accent-text)", fontWeight: 600 }}>
-              <ExternalLink size={13} /> Abrir em Demandas Freela (valores e pagamentos)
-            </a>
+            <button type="button" onClick={onAbrirLista} className="link-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, marginTop: 10, color: "var(--accent-text)", fontWeight: 600 }}>
+              <ExternalLink size={13} /> Ver valores e pagamentos na lista
+            </button>
           </div>
         ) : (
           <>
@@ -134,7 +134,7 @@ function CardModal({ item, novoStatus, pagamentos, onClose, onSave, onDelete }) 
   );
 }
 
-export default function Quadro() {
+export default function Quadro({ onAbrirLista }) {
   const { userId } = useAuth();
   const [freela, setFreela] = useState([]);
   const [cards, setCards] = useState([]);
@@ -316,7 +316,7 @@ export default function Quadro() {
 
       {modal && (modal.novo || modalItem) && (
         <CardModal key={modal.key || "novo"} item={modalItem} novoStatus={modal.status} pagamentos={modalItem?.tipo === "freela" ? pagamentos.filter((p) => p.demanda_id === modalItem.id) : []}
-          onClose={() => setModal(null)} onSave={salvar} onDelete={excluir} />
+          onClose={() => setModal(null)} onSave={salvar} onDelete={excluir} onAbrirLista={() => { setModal(null); onAbrirLista && onAbrirLista(); }} />
       )}
     </div>
   );
