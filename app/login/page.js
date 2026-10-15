@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { Button, Input, Field, Card } from "@/components/ui";
+import { Button, Input, Field, Card, ThemeToggle } from "@/components/ui";
 
 export default function LoginPage() {
   const [mode, setMode] = useState("login"); // login | signup
@@ -32,9 +32,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", padding: 16 }}>
+    <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", padding: 16 }}>
+      <div style={{ position: "absolute", top: 16, right: 16 }}><ThemeToggle /></div>
       <Card style={{ padding: 32, width: 400, maxWidth: "100%", boxShadow: "none" }}>
-        <img src="/logo.svg" alt="Zentrix Flow" style={{ height: 52, marginBottom: 18, display: "block" }} />
+        <img className="logo-dark" src="/logo.svg" alt="Zentrix Flow" style={{ height: 52, marginBottom: 18 }} />
+        <img className="logo-light" src="/logo-light.svg" alt="Zentrix Flow" style={{ height: 52, marginBottom: 18 }} />
         <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 4 }}>{mode === "login" ? "Entrar" : "Criar conta"}</div>
         <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20 }}>Financeiro, demandas e contratos para quem presta serviço</div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -48,9 +50,9 @@ export default function LoginPage() {
         </form>
         <div style={{ marginTop: 16, textAlign: "center", fontSize: 12.5, color: "var(--muted)" }}>
           {mode === "login" ? (
-            <>Ainda não tem conta? <button onClick={() => setMode("signup")} style={{ background: "none", border: "none", color: "#E1FE1C", cursor: "pointer" }}>Criar conta</button></>
+            <>Ainda não tem conta? <button onClick={() => setMode("signup")} style={{ background: "none", border: "none", color: "var(--accent-text)", cursor: "pointer" }}>Criar conta</button></>
           ) : (
-            <>Já tem conta? <button onClick={() => setMode("login")} style={{ background: "none", border: "none", color: "#E1FE1C", cursor: "pointer" }}>Entrar</button></>
+            <>Já tem conta? <button onClick={() => setMode("login")} style={{ background: "none", border: "none", color: "var(--accent-text)", cursor: "pointer" }}>Entrar</button></>
           )}
         </div>
       </Card>

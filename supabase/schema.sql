@@ -161,3 +161,25 @@ create policy "own files update" on storage.objects for update
   using (bucket_id = 'arquivos' and auth.uid()::text = (storage.foldername(name))[1]);
 create policy "own files delete" on storage.objects for delete
   using (bucket_id = 'arquivos' and auth.uid()::text = (storage.foldername(name))[1]);
+
+-- ============================================================
+-- QUADRO DE DEMANDAS (estilo Trello) — veja também migracao-002.sql
+-- ============================================================
+alter table public.demandas_freela add column if not exists checklist jsonb default '[]'::jsonb;
+alter table public.demandas_freela add column if not exists quadro_pos numeric default 0;
+
+create table if not exists public.quadro_cards (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade,
+  titulo text not null,
+  descricao text,
+  status text default 'nao_iniciado',
+  etiqueta text,
+  prioridade text,
+  prazo date,
+  checklist jsonb default '[]'::jsonb,
+  posicao numeric default 0,
+  created_at timestamptz default now()
+);
+alter table public.quadro_cards enable row level security;
+create policy "own rows" on public.quadro_cards for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

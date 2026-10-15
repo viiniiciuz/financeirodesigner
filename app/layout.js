@@ -7,7 +7,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('zf-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){}" }} />
+      </head>
       <body>{children}</body>
     </html>
   );

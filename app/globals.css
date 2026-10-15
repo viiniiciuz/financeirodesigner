@@ -2,17 +2,31 @@
 
 * { box-sizing: border-box; }
 html, body { padding: 0; margin: 0; }
+:root, :root[data-theme="dark"] {
+  --bg: #111316; --surface: #1B1E23; --surface2: #262A30; --sidebar: #16181C;
+  --border: rgba(255,255,255,0.07); --border-strong: rgba(255,255,255,0.25); --hover: rgba(255,255,255,0.04);
+  --text: #F2F4F7; --muted: #8C929C; --success: #2DD4A0; --danger: #F0506E;
+  --lime: #E1FE1C; --lime-soft: #EAFF5A; --on-lime: #101010; --accent-text: #E1FE1C;
+  --overlay: rgba(0,0,0,0.7); --scroll: rgba(255,255,255,0.14); color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --bg: #F2F3EE; --surface: #FFFFFF; --surface2: #F0F1EB; --sidebar: #FFFFFF;
+  --border: rgba(16,18,20,0.10); --border-strong: rgba(16,18,20,0.30); --hover: rgba(16,18,20,0.04);
+  --text: #14161A; --muted: #6B7280; --success: #0E9F6E; --danger: #D63B57;
+  --lime: #E1FE1C; --lime-soft: #EAFF5A; --on-lime: #101010; --accent-text: #4D5E00;
+  --overlay: rgba(20,22,26,0.45); --scroll: rgba(16,18,20,0.20); color-scheme: light;
+}
 body {
   font-family: 'Inter', sans-serif;
-  --bg: #111316; --surface: #1B1E23; --surface2: #262A30; --border: rgba(255,255,255,0.07);
-  --text: #F2F4F7; --muted: #8C929C; --success: #2DD4A0; --danger: #F0506E;
-  --lime: #E1FE1C; --lime-soft: #EAFF5A; --on-lime: #101010;
   background: var(--bg); color: var(--text); min-height: 100vh;
 }
+.logo-light { display: none; }
+:root[data-theme="light"] .logo-dark { display: none; }
+:root[data-theme="light"] .logo-light { display: block; }
 a { color: inherit; text-decoration: none; }
 .shell { display: flex; min-height: 100vh; }
 .sidebar {
-  width: 240px; flex-shrink: 0; background: #16181C; border-right: 1px solid var(--border);
+  width: 240px; flex-shrink: 0; background: var(--sidebar); border-right: 1px solid var(--border);
   display: flex; flex-direction: column; padding: 22px 14px; position: sticky; top: 0; height: 100vh;
 }
 .brand { padding: 2px 6px 22px 6px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -50,16 +64,16 @@ a { color: inherit; text-decoration: none; }
 .table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .table th { text-align: left; padding: 12px 16px; color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .table td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
-.table tbody tr:hover { background: rgba(255,255,255,0.03); }
+.table tbody tr:hover { background: var(--hover); }
 .table tr:last-child td { border-bottom: none; }
 .link-btn { background: none; border: none; cursor: pointer; padding: 0; color: inherit; text-align: left; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .task-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 16px; background: var(--surface2); }
-.checkbox { width: 20px; height: 20px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,0.25); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--on-lime); flex-shrink: 0; }
+.checkbox { width: 20px; height: 20px; border-radius: 7px; border: 1.5px solid var(--border-strong); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--on-lime); flex-shrink: 0; }
 .checkbox.checked { background: var(--lime); border-color: var(--lime); }
 input:focus, select:focus, textarea:focus { border-color: var(--lime) !important; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
 @media (max-width: 900px) {
@@ -69,7 +83,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--lime) !important
   .form-grid { grid-template-columns: 1fr; }
   .sidebar { position: fixed; left: -260px; top: 0; z-index: 60; transition: left .2s ease; box-shadow: 0 0 40px rgba(0,0,0,.6); }
   .sidebar.open { left: 0; }
-  .sidebar-backdrop { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 50; }
+  .sidebar-backdrop { display: block; position: fixed; inset: 0; background: var(--overlay); z-index: 50; }
   .menu-btn { display: block; }
   .content { padding: 16px; }
   .section-title { font-size: 22px; }
@@ -80,3 +94,18 @@ input:focus, select:focus, textarea:focus { border-color: var(--lime) !important
   .table td::before { content: attr(data-label); color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; }
   .table td[data-label=""]::before { content: none; }
 }
+
+/* ---------- Quadro de demandas ---------- */
+.kb-board { display: flex; gap: 14px; overflow-x: auto; align-items: flex-start; padding-bottom: 14px; }
+.kb-col { width: 296px; flex-shrink: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 14px; display: flex; flex-direction: column; max-height: calc(100vh - 230px); transition: border-color .12s ease; }
+.kb-col.over { border-color: var(--lime); }
+.kb-col-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 6px 12px 6px; font-size: 13.5px; font-weight: 700; }
+.kb-count { font-size: 12px; color: var(--muted); font-weight: 600; background: var(--surface2); border-radius: 999px; padding: 2px 9px; }
+.kb-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; min-height: 40px; padding: 2px; flex: 1; }
+.kb-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 13px; cursor: grab; transition: border-color .12s ease; }
+.kb-card:hover { border-color: var(--border-strong); }
+.kb-card.dragging { opacity: 0.35; }
+.kb-drop { height: 4px; border-radius: 99px; background: var(--lime); flex-shrink: 0; }
+.kb-add { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 10px 8px 4px 8px; cursor: pointer; font-family: inherit; text-align: left; }
+.kb-add:hover { color: var(--text); }
+@media (max-width: 900px) { .kb-col { width: 270px; max-height: none; } }

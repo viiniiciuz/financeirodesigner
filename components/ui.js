@@ -1,14 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
-import { X, Upload, Paperclip, Eye, Trash2 } from "lucide-react";
+import { X, Upload, Paperclip, Eye, Trash2, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/lib/theme";
 import { formatCentsToBR } from "@/lib/helpers";
 
 export function Badge({ color, bg, children }) {
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 999,
-      fontSize: 12, fontWeight: 600, color: color || "#E8ECF3", background: bg || "rgba(255,255,255,0.06)",
-      whiteSpace: "nowrap", border: `1px solid ${(color || "#8B96AB")}33`,
+      fontSize: 12, fontWeight: 600, color: color || "var(--text)", background: bg || "var(--surface2)",
+      whiteSpace: "nowrap", border: color && color.startsWith("#") ? `1px solid ${color}33` : "1px solid var(--border)",
     }}>{children}</span>
   );
 }
@@ -50,7 +51,7 @@ export function Button({ children, variant = "primary", onClick, style, type = "
   };
   const variants = {
     primary: { background: "#E1FE1C", color: "#101010" },
-    secondary: { background: "var(--surface2)", color: "var(--text)", border: "1px solid rgba(255,255,255,0.08)" },
+    secondary: { background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" },
     ghost: { background: "transparent", color: "var(--muted)" },
     danger: { background: "rgba(240,80,110,0.12)", color: "#FF7A93", border: "1px solid rgba(240,80,110,0.32)" },
   };
@@ -104,8 +105,13 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
 }
 
 export function Modal({ title, onClose, children, width = 640 }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, background: "var(--overlay)", zIndex: 100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }} onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="card" style={{ width: "100%", maxWidth: width, padding: 0, marginBottom: 40 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid var(--border)" }}>
           <div style={{ fontSize: 15, fontWeight: 700 }}>{title}</div>
@@ -154,5 +160,18 @@ export function FileField({ label, fileUrl, fileName, onUpload, onRemove, upload
         </div>
       )}
     </Field>
+  );
+}
+
+export function ThemeToggle({ style }) {
+  const [theme, setTheme] = useTheme();
+  const light = theme === "light";
+  return (
+    <button onClick={() => setTheme(light ? "dark" : "light")} title={light ? "Mudar para o modo noturno" : "Mudar para o modo claro"}
+      aria-label="Alternar entre modo claro e noturno"
+      style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 999, cursor: "pointer", fontSize: 12.5, fontWeight: 600,
+        background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)", ...style }}>
+      {light ? <Moon size={15} /> : <Sun size={15} />} {light ? "Noturno" : "Claro"}
+    </button>
   );
 }

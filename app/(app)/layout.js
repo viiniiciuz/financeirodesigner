@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Settings, Menu, Building, LogOut } from "lucide-react";
+import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Settings, Menu, Building, LogOut, FolderKanban, ChevronDown } from "lucide-react";
+import { ThemeToggle } from "@/components/ui";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -9,9 +10,11 @@ const LOGO_SRC = "/logo.svg";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/demandas", label: "Demandas", icon: ListChecks },
-  { href: "/freela", label: "Demandas Freela", icon: Briefcase },
-  { href: "/trabalhos-empresa", label: "Trabalhos de Empresa", icon: Building2 },
+  { label: "Trabalho", icon: FolderKanban, children: [
+    { href: "/demandas", label: "Demandas", icon: ListChecks },
+    { href: "/freela", label: "Demandas Freela", icon: Briefcase },
+    { href: "/trabalhos-empresa", label: "Trabalhos de Empresa", icon: Building2 },
+  ] },
   { href: "/clientes", label: "Clientes", icon: Users },
   { href: "/empresas", label: "Empresas", icon: Building },
   { href: "/pagamentos", label: "Pagamentos", icon: Wallet },
@@ -21,6 +24,7 @@ const NAV = [
 export default function AppLayout({ children }) {
   const { loading, session } = useAuth();
   const [open, setOpen] = useState(false);
+  const [trabalhoAberto, setTrabalhoAberto] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -34,10 +38,27 @@ export default function AppLayout({ children }) {
       {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
       <div className={`sidebar ${open ? "open" : ""}`}>
         <div className="brand">
-          <img src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 190, height: "auto" }} />
+          <img className="logo-dark" src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 190, height: "auto" }} />
+          <img className="logo-light" src="/logo-light.svg" alt="Zentrix Flow" style={{ width: 190, height: "auto" }} />
         </div>
         <div className="nav">
-          {NAV.map((n) => (
+          {NAV.map((n) => n.children ? (
+            <div key={n.label}>
+              <button className="nav-item" style={{ width: "100%", color: n.children.some((c) => c.href === pathname) ? "var(--text)" : undefined }} onClick={() => setTrabalhoAberto((v) => !v)}>
+                <n.icon size={16} /> <span style={{ flex: 1 }}>{n.label}</span>
+                <ChevronDown size={15} style={{ transition: "transform .15s ease", transform: trabalhoAberto ? "none" : "rotate(-90deg)" }} />
+              </button>
+              {trabalhoAberto && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, margin: "4px 0 4px 14px", paddingLeft: 8, borderLeft: "1px solid var(--border)" }}>
+                  {n.children.map((c) => (
+                    <a key={c.href} href={c.href} className={`nav-item ${pathname === c.href ? "active" : ""}`} onClick={() => setOpen(false)}>
+                      <c.icon size={16} /> <span>{c.label}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
             <a key={n.href} href={n.href} className={`nav-item ${pathname === n.href ? "active" : ""}`} onClick={() => setOpen(false)}>
               <n.icon size={16} /> <span>{n.label}</span>
             </a>
@@ -50,6 +71,7 @@ export default function AppLayout({ children }) {
       <div className="main">
         <div className="topbar">
           <button className="menu-btn" onClick={() => setOpen((o) => !o)}><Menu size={18} /></button>
+          <div style={{ marginLeft: "auto" }}><ThemeToggle /></div>
         </div>
         <div className="content">{children}</div>
       </div>

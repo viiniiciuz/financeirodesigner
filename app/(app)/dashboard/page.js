@@ -4,11 +4,14 @@ import { TrendingUp, CheckCircle2, Clock, ListChecks } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
+import { useTheme, chartColors } from "@/lib/theme";
 import { StatCard, Card, EmptyState, Badge } from "@/components/ui";
 import { STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, statusFinanceiroEmpresa, MESES_ABREV } from "@/lib/helpers";
 
 export default function DashboardPage() {
   const { userId } = useAuth();
+  const [theme] = useTheme();
+  const C = chartColors(theme);
   const [loading, setLoading] = useState(true);
   const [demandas, setDemandas] = useState([]);
   const [pagamentosFreela, setPagamentosFreela] = useState([]);
@@ -75,7 +78,7 @@ export default function DashboardPage() {
     return { name: `${MESES_ABREV[m]}/${String(y).slice(2)}`, total: fF.reduce((a, d) => a + Number(d.valor_total || 0), 0) + fE.reduce((a, t) => a + Number(t.valor || 0), 0) };
   });
 
-  const pieData = [{ name: "Freelancer", value: fatFreela, color: "#E1FE1C" }, { name: "Empresas", value: fatEmpresa, color: "#E8EAED" }];
+  const pieData = [{ name: "Freelancer", value: fatFreela, color: C.bar }, { name: "Empresas", value: fatEmpresa, color: C.pie2 }];
 
   const upcoming = [];
   demandas.forEach((d) => { const st = statusFinanceiroFreela(d, pagsDe(d.id)); if (st !== "pago" && st !== "cancelado") upcoming.push({ nome: d.cliente, valor: Number(d.valor_total) - sumPagamentos(pagsDe(d.id)), venc: d.vencimento_pagamento, status: st }); });
@@ -85,10 +88,10 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="grid-4">
-        <StatCard label="Faturamento do mês" value={toBRL(fatTotal)} icon={TrendingUp} accent="#E1FE1C" />
+        <StatCard label="Faturamento do mês" value={toBRL(fatTotal)} icon={TrendingUp} accent={C.accent} />
         <StatCard label="Total recebido" value={toBRL(recTotal)} icon={CheckCircle2} accent="#2DD4A0" />
         <StatCard label="Total pendente" value={toBRL(pendTotal)} icon={Clock} accent="#F59E0B" />
-        <StatCard label="Demandas de hoje" value={`${doneHoje}/${tarefasHoje.length}`} icon={ListChecks} accent="#E8EAED" />
+        <StatCard label="Demandas de hoje" value={`${doneHoje}/${tarefasHoje.length}`} icon={ListChecks} accent={C.neutral} />
       </div>
 
       <div className="grid-4" style={{ marginTop: 14 }}>
@@ -103,11 +106,11 @@ export default function DashboardPage() {
           <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Faturamento por mês</div>
           <ResponsiveContainer width="100%" height={230}>
             <BarChart data={chartData}>
-              <CartesianGrid stroke="rgba(255,255,255,0.07)" strokeDasharray="4 4" vertical={false} />
-              <XAxis dataKey="name" stroke="#8C929C" fontSize={11.5} tickLine={false} axisLine={false} />
-              <YAxis stroke="#8C929C" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-              <Tooltip contentStyle={{ background: "#262A30", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12.5, color: "#F2F4F7" }} itemStyle={{ color: "#F2F4F7" }} cursor={{ fill: "rgba(255,255,255,0.05)" }} formatter={(v) => toBRL(v)} />
-              <Bar dataKey="total" radius={[10, 10, 0, 0]} fill="#E1FE1C" />
+              <CartesianGrid stroke={C.grid} strokeDasharray="4 4" vertical={false} />
+              <XAxis dataKey="name" stroke={C.axis} fontSize={11.5} tickLine={false} axisLine={false} />
+              <YAxis stroke={C.axis} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+              <Tooltip contentStyle={{ background: C.tipBg, border: `1px solid ${C.tipBorder}`, borderRadius: 12, fontSize: 12.5, color: C.tipText }} itemStyle={{ color: C.tipText }} cursor={{ fill: C.cursor }} formatter={(v) => toBRL(v)} />
+              <Bar dataKey="total" radius={[10, 10, 0, 0]} fill={C.bar} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -118,7 +121,7 @@ export default function DashboardPage() {
               <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={80} paddingAngle={3}>
                 {pieData.map((p, i) => <Cell key={i} fill={p.color} stroke="none" />)}
               </Pie>
-              <Tooltip contentStyle={{ background: "#262A30", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12.5, color: "#F2F4F7" }} itemStyle={{ color: "#F2F4F7" }} cursor={{ fill: "rgba(255,255,255,0.05)" }} formatter={(v) => toBRL(v)} />
+              <Tooltip contentStyle={{ background: C.tipBg, border: `1px solid ${C.tipBorder}`, borderRadius: 12, fontSize: 12.5, color: C.tipText }} itemStyle={{ color: C.tipText }} cursor={{ fill: C.cursor }} formatter={(v) => toBRL(v)} />
             </PieChart>
           </ResponsiveContainer>
         </Card>
