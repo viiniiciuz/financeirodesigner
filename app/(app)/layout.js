@@ -21,7 +21,9 @@ const SECOES = [
     { href: "/freela", label: "Demandas Freela", icon: Briefcase },
     { href: "/trabalhos-empresa", label: "Trabalhos de Empresa", icon: Building2 },
   ] },
-  { label: "Contrato", icon: FileSignature, itens: [], emBreve: true },
+  { label: "Contrato", icon: FileSignature, itens: [
+    { href: "/contratos", label: "Contratos", icon: FileSignature },
+  ] },
 ];
 
 export default function AppLayout({ children }) {

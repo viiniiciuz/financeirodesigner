@@ -112,3 +112,19 @@ input:focus, select:focus, textarea:focus { border-color: var(--lime) !important
 .kb-add { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 10px 8px 4px 8px; cursor: pointer; font-family: inherit; text-align: left; }
 .kb-add:hover { color: var(--text); }
 @media (max-width: 900px) { .kb-col { width: 270px; max-height: none; } }
+
+/* ---------- Contratos / documento ---------- */
+.doc-paper { background: #fff; color: #111; font-family: Georgia, 'Times New Roman', serif; font-size: 14px; line-height: 1.55; padding: 40px 48px; border-radius: 6px; }
+.doc-paper h1 { font-size: 19px; text-align: center; margin: 0 0 22px; letter-spacing: .02em; }
+.doc-paper h2 { font-size: 14.5px; margin: 18px 0 4px; }
+.doc-paper p { margin: 0; white-space: pre-wrap; }
+.doc-paper .doc-li { padding-left: 14px; }
+.print-only { display: none; }
+@media (max-width: 900px) { .doc-paper { padding: 22px 18px; } }
+@page { margin: 18mm; }
+@media print {
+  body > *:not(.print-only) { display: none !important; }
+  .print-only { display: block; }
+  body { background: #fff !important; }
+  .print-only .doc-paper { padding: 0; border-radius: 0; }
+}
