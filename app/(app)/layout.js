@@ -20,7 +20,7 @@ const SECOES = [
     { href: "/freela", label: "Demandas Freela", icon: Briefcase },
     { href: "/trabalhos-empresa", label: "Trabalhos de Empresa", icon: Building2 },
   ] },
-  { label: "Contrato", icon: FileSignature, itens: [] },
+  { label: "Contrato", icon: FileSignature, itens: [], emBreve: true },
 ];
 
 export default function AppLayout({ children }) {
@@ -50,14 +50,13 @@ export default function AppLayout({ children }) {
           ))}
           {SECOES.map((s) => (
             <div key={s.label}>
-              <div className="nav-section"><s.icon size={13} /><span>{s.label}</span><i /></div>
+              <div className="nav-section"><s.icon size={13} /><span>{s.label}</span>{s.emBreve && <b className="tag-soon">Em breve</b>}<i /></div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {s.itens.map((c) => (
                   <a key={c.href} href={c.href} className={`nav-item ${pathname === c.href ? "active" : ""}`} onClick={() => setOpen(false)}>
                     <c.icon size={16} /> <span>{c.label}</span>
                   </a>
                 ))}
-                {s.itens.length === 0 && <div style={{ fontSize: 12, color: "var(--muted)", padding: "4px 14px 8px" }}>Em breve: modelos de contrato</div>}
               </div>
             </div>
           ))}
