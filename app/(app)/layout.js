@@ -24,7 +24,7 @@ export default function AppLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (loading) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#8B96AB" }}>Carregando…</div>;
+  if (loading) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#8191B8" }}>Carregando…</div>;
   if (!session) return null; // useAuth já redireciona para /login
 
   const logout = async () => { await supabase.auth.signOut(); router.replace("/login"); };

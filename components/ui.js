@@ -44,15 +44,15 @@ export function StatCard({ label, value, sub, accent, icon: Icon }) {
 
 export function Button({ children, variant = "primary", onClick, style, type = "button", size = "md", disabled }) {
   const base = {
-    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 9, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
+    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 12, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
     border: "1px solid transparent", transition: "all .15s ease", opacity: disabled ? 0.6 : 1,
     padding: size === "sm" ? "6px 12px" : "9px 16px", fontSize: size === "sm" ? 12.5 : 13.5,
   };
   const variants = {
-    primary: { background: "linear-gradient(135deg,#2F6BFF,#22D3EE)", color: "#04121F" },
-    secondary: { background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" },
+    primary: { background: "linear-gradient(180deg,#4A93FF,#1F5BFF)", color: "#fff", boxShadow: "0 6px 20px rgba(47,123,255,0.45), inset 0 1px 0 rgba(255,255,255,0.25)" },
+    secondary: { background: "rgba(47,123,255,0.12)", color: "var(--text)", border: "1px solid rgba(111,163,255,0.28)" },
     ghost: { background: "transparent", color: "var(--muted)" },
-    danger: { background: "rgba(239,68,68,0.12)", color: "#F87171", border: "1px solid rgba(239,68,68,0.3)" },
+    danger: { background: "rgba(240,80,110,0.12)", color: "#FF7A93", border: "1px solid rgba(240,80,110,0.32)" },
   };
   return <button type={type} disabled={disabled} onClick={onClick} style={{ ...base, ...variants[variant], ...style }}>{children}</button>;
 }
@@ -60,7 +60,7 @@ export function Button({ children, variant = "primary", onClick, style, type = "
 export function IconBtn({ icon: Icon, onClick, title, danger }) {
   return (
     <button title={title} onClick={onClick} style={{
-      width: 30, height: 30, borderRadius: 7, display: "inline-flex", alignItems: "center", justifyContent: "center",
+      width: 32, height: 32, borderRadius: 10, display: "inline-flex", alignItems: "center", justifyContent: "center",
       background: "var(--surface2)", border: "1px solid var(--border)", cursor: "pointer",
       color: danger ? "#F87171" : "var(--muted)",
     }}><Icon size={14} /></button>
@@ -75,7 +75,7 @@ export function Field({ label, children, full }) {
 }
 
 const inputStyle = {
-  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 11px",
+  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 11, padding: "10px 12px",
   color: "var(--text)", fontSize: 13.5, outline: "none", width: "100%", fontFamily: "inherit",
 };
 
@@ -95,7 +95,7 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
     onChange(num);
   };
   return (
-    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "0 11px", ...(style || {}) }}>
+    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 11, padding: "0 12px", ...(style || {}) }}>
       <span style={{ color: "var(--muted)", fontSize: 13.5, marginRight: 4 }}>R$</span>
       <input value={display} onChange={handleChange} placeholder={placeholder || "0,00"} inputMode="decimal"
         style={{ background: "none", border: "none", outline: "none", color: "var(--text)", fontSize: 13.5, padding: "9px 0", width: "100%", fontFamily: "inherit" }} />
@@ -105,7 +105,7 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
 
 export function Modal({ title, onClose, children, width = 640 }) {
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(5,8,14,0.65)", backdropFilter: "blur(3px)", zIndex: 100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(3,6,18,0.7)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }} onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="card" style={{ width: "100%", maxWidth: width, padding: 0, marginBottom: 40 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid var(--border)" }}>
           <div style={{ fontSize: 15, fontWeight: 700 }}>{title}</div>
@@ -120,7 +120,7 @@ export function Modal({ title, onClose, children, width = 640 }) {
 export function ProgressBar({ pct, color }) {
   return (
     <div style={{ height: 7, borderRadius: 99, background: "var(--surface2)", overflow: "hidden" }}>
-      <div style={{ height: "100%", width: `${pct}%`, background: color || "linear-gradient(90deg,#2F6BFF,#22D3EE)", borderRadius: 99, transition: "width .3s ease" }} />
+      <div style={{ height: "100%", width: `${pct}%`, background: color || "linear-gradient(90deg,#2F7BFF,#22D3EE)", boxShadow: "0 0 10px rgba(47,123,255,0.6)", borderRadius: 99, transition: "width .3s ease" }} />
     </div>
   );
 }
