@@ -5,7 +5,7 @@ import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Setti
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 
-const LOGO_SRC = "/zlogo.png";
+const LOGO_SRC = "/logo.svg";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -24,7 +24,7 @@ export default function AppLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (loading) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#8E977E" }}>Carregando…</div>;
+  if (loading) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#8C929C" }}>Carregando…</div>;
   if (!session) return null; // useAuth já redireciona para /login
 
   const logout = async () => { await supabase.auth.signOut(); router.replace("/login"); };
@@ -34,8 +34,7 @@ export default function AppLayout({ children }) {
       {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
       <div className={`sidebar ${open ? "open" : ""}`}>
         <div className="brand">
-          <img src={LOGO_SRC} alt="Zentrix Flow" style={{ height: 26 }} />
-          <span className="brand-text">Zentrix Flow</span>
+          <img src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 190, height: "auto" }} />
         </div>
         <div className="nav">
           {NAV.map((n) => (

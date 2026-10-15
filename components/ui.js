@@ -44,13 +44,13 @@ export function StatCard({ label, value, sub, accent, icon: Icon }) {
 
 export function Button({ children, variant = "primary", onClick, style, type = "button", size = "md", disabled }) {
   const base = {
-    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 12, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
+    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 999, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
     border: "1px solid transparent", transition: "all .15s ease", opacity: disabled ? 0.6 : 1,
     padding: size === "sm" ? "6px 12px" : "9px 16px", fontSize: size === "sm" ? 12.5 : 13.5,
   };
   const variants = {
-    primary: { background: "linear-gradient(180deg,#D9FF5A,#B4E21F)", color: "#0A0F02", boxShadow: "0 6px 22px rgba(198,244,50,0.32), inset 0 1px 0 rgba(255,255,255,0.35)" },
-    secondary: { background: "rgba(198,244,50,0.09)", color: "var(--text)", border: "1px solid rgba(198,244,50,0.28)" },
+    primary: { background: "#E1FE1C", color: "#101010" },
+    secondary: { background: "var(--surface2)", color: "var(--text)", border: "1px solid rgba(255,255,255,0.08)" },
     ghost: { background: "transparent", color: "var(--muted)" },
     danger: { background: "rgba(240,80,110,0.12)", color: "#FF7A93", border: "1px solid rgba(240,80,110,0.32)" },
   };
@@ -60,7 +60,7 @@ export function Button({ children, variant = "primary", onClick, style, type = "
 export function IconBtn({ icon: Icon, onClick, title, danger }) {
   return (
     <button title={title} onClick={onClick} style={{
-      width: 32, height: 32, borderRadius: 10, display: "inline-flex", alignItems: "center", justifyContent: "center",
+      width: 32, height: 32, borderRadius: 999, display: "inline-flex", alignItems: "center", justifyContent: "center",
       background: "var(--surface2)", border: "1px solid var(--border)", cursor: "pointer",
       color: danger ? "#F87171" : "var(--muted)",
     }}><Icon size={14} /></button>
@@ -75,7 +75,7 @@ export function Field({ label, children, full }) {
 }
 
 const inputStyle = {
-  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 11, padding: "10px 12px",
+  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 14, padding: "10px 14px",
   color: "var(--text)", fontSize: 13.5, outline: "none", width: "100%", fontFamily: "inherit",
 };
 
@@ -95,7 +95,7 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
     onChange(num);
   };
   return (
-    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 11, padding: "0 12px", ...(style || {}) }}>
+    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 14, padding: "0 14px", ...(style || {}) }}>
       <span style={{ color: "var(--muted)", fontSize: 13.5, marginRight: 4 }}>R$</span>
       <input value={display} onChange={handleChange} placeholder={placeholder || "0,00"} inputMode="decimal"
         style={{ background: "none", border: "none", outline: "none", color: "var(--text)", fontSize: 13.5, padding: "9px 0", width: "100%", fontFamily: "inherit" }} />
@@ -105,7 +105,7 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
 
 export function Modal({ title, onClose, children, width = 640 }) {
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(3,5,2,0.72)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }} onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="card" style={{ width: "100%", maxWidth: width, padding: 0, marginBottom: 40 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid var(--border)" }}>
           <div style={{ fontSize: 15, fontWeight: 700 }}>{title}</div>
@@ -120,7 +120,7 @@ export function Modal({ title, onClose, children, width = 640 }) {
 export function ProgressBar({ pct, color }) {
   return (
     <div style={{ height: 7, borderRadius: 99, background: "var(--surface2)", overflow: "hidden" }}>
-      <div style={{ height: "100%", width: `${pct}%`, background: color || "linear-gradient(90deg,#B4E21F,#D9FF5A)", boxShadow: "0 0 10px rgba(198,244,50,0.5)", borderRadius: 99, transition: "width .3s ease" }} />
+      <div style={{ height: "100%", width: `${pct}%`, background: color || "#E1FE1C", borderRadius: 99, transition: "width .3s ease" }} />
     </div>
   );
 }

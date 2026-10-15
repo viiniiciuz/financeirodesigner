@@ -75,7 +75,7 @@ export default function DashboardPage() {
     return { name: `${MESES_ABREV[m]}/${String(y).slice(2)}`, total: fF.reduce((a, d) => a + Number(d.valor_total || 0), 0) + fE.reduce((a, t) => a + Number(t.valor || 0), 0) };
   });
 
-  const pieData = [{ name: "Freelancer", value: fatFreela, color: "#C6F432" }, { name: "Empresas", value: fatEmpresa, color: "#2DD4BF" }];
+  const pieData = [{ name: "Freelancer", value: fatFreela, color: "#E1FE1C" }, { name: "Empresas", value: fatEmpresa, color: "#E8EAED" }];
 
   const upcoming = [];
   demandas.forEach((d) => { const st = statusFinanceiroFreela(d, pagsDe(d.id)); if (st !== "pago" && st !== "cancelado") upcoming.push({ nome: d.cliente, valor: Number(d.valor_total) - sumPagamentos(pagsDe(d.id)), venc: d.vencimento_pagamento, status: st }); });
@@ -85,10 +85,10 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="grid-4">
-        <StatCard label="Faturamento do mês" value={toBRL(fatTotal)} icon={TrendingUp} accent="#C6F432" />
+        <StatCard label="Faturamento do mês" value={toBRL(fatTotal)} icon={TrendingUp} accent="#E1FE1C" />
         <StatCard label="Total recebido" value={toBRL(recTotal)} icon={CheckCircle2} accent="#2DD4A0" />
         <StatCard label="Total pendente" value={toBRL(pendTotal)} icon={Clock} accent="#F59E0B" />
-        <StatCard label="Demandas de hoje" value={`${doneHoje}/${tarefasHoje.length}`} icon={ListChecks} accent="#2DD4BF" />
+        <StatCard label="Demandas de hoje" value={`${doneHoje}/${tarefasHoje.length}`} icon={ListChecks} accent="#E8EAED" />
       </div>
 
       <div className="grid-4" style={{ marginTop: 14 }}>
@@ -103,12 +103,11 @@ export default function DashboardPage() {
           <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Faturamento por mês</div>
           <ResponsiveContainer width="100%" height={230}>
             <BarChart data={chartData}>
-              <defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#D9FF5A" /><stop offset="100%" stopColor="#7CB518" stopOpacity={0.55} /></linearGradient></defs>
-              <CartesianGrid stroke="rgba(198,244,50,0.10)" strokeDasharray="4 4" vertical={false} />
-              <XAxis dataKey="name" stroke="#8E977E" fontSize={11.5} tickLine={false} axisLine={false} />
-              <YAxis stroke="#8E977E" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-              <Tooltip contentStyle={{ background: "rgba(16,20,10,0.94)", border: "1px solid rgba(198,244,50,0.3)", borderRadius: 12, fontSize: 12.5, color: "#F4F7EC" }} itemStyle={{ color: "#F4F7EC" }} cursor={{ fill: "rgba(198,244,50,0.07)" }} formatter={(v) => toBRL(v)} />
-              <Bar dataKey="total" radius={[8, 8, 0, 0]} fill="url(#barGrad)" />
+              <CartesianGrid stroke="rgba(255,255,255,0.07)" strokeDasharray="4 4" vertical={false} />
+              <XAxis dataKey="name" stroke="#8C929C" fontSize={11.5} tickLine={false} axisLine={false} />
+              <YAxis stroke="#8C929C" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+              <Tooltip contentStyle={{ background: "#262A30", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12.5, color: "#F2F4F7" }} itemStyle={{ color: "#F2F4F7" }} cursor={{ fill: "rgba(255,255,255,0.05)" }} formatter={(v) => toBRL(v)} />
+              <Bar dataKey="total" radius={[10, 10, 0, 0]} fill="#E1FE1C" />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -119,7 +118,7 @@ export default function DashboardPage() {
               <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={80} paddingAngle={3}>
                 {pieData.map((p, i) => <Cell key={i} fill={p.color} stroke="none" />)}
               </Pie>
-              <Tooltip contentStyle={{ background: "rgba(16,20,10,0.94)", border: "1px solid rgba(198,244,50,0.3)", borderRadius: 12, fontSize: 12.5, color: "#F4F7EC" }} itemStyle={{ color: "#F4F7EC" }} cursor={{ fill: "rgba(198,244,50,0.07)" }} formatter={(v) => toBRL(v)} />
+              <Tooltip contentStyle={{ background: "#262A30", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12.5, color: "#F2F4F7" }} itemStyle={{ color: "#F2F4F7" }} cursor={{ fill: "rgba(255,255,255,0.05)" }} formatter={(v) => toBRL(v)} />
             </PieChart>
           </ResponsiveContainer>
         </Card>
