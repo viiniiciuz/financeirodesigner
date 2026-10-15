@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Settings, Menu, Building, LogOut, FolderKanban, FileSignature } from "lucide-react";
+import { LayoutDashboard, ListChecks, Briefcase, Building2, Users, Wallet, Settings, Menu, Building, LogOut, FolderKanban, FileSignature, Receipt } from "lucide-react";
 import { ThemeToggle } from "@/components/ui";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabaseClient";
@@ -13,6 +13,7 @@ const TOPO = [
   { href: "/clientes", label: "Clientes", icon: Users },
   { href: "/empresas", label: "Empresas", icon: Building },
   { href: "/pagamentos", label: "Pagamentos", icon: Wallet },
+  { href: "/despesas", label: "Despesas", icon: Receipt },
 ];
 const SECOES = [
   { label: "Trabalho", icon: FolderKanban, itens: [

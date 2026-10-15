@@ -20,7 +20,8 @@ export default function ConfiguracoesPage() {
   const set = (k, v) => setF((p) => ({ ...p, [k]: v }));
 
   const salvar = async () => {
-    await supabase.from("config").upsert({ ...f, user_id: userId, updated_at: new Date().toISOString() });
+    const { error } = await supabase.from("config").upsert({ ...f, user_id: userId, updated_at: new Date().toISOString() });
+    if (error) { alert("Não foi possível salvar: " + error.message + (error.message.includes("chave_pix") ? "\n\nRode o arquivo supabase/migracao-003.sql no Supabase." : "")); return; }
     alert("Configurações salvas!");
   };
 
@@ -35,6 +36,7 @@ export default function ConfiguracoesPage() {
           <Field label="Nome profissional"><Input value={f.nome_profissional || ""} onChange={(e) => set("nome_profissional", e.target.value)} /></Field>
           <Field label="Telefone"><Input value={f.telefone || ""} onChange={(e) => set("telefone", e.target.value)} /></Field>
           <Field label="E-mail"><Input value={f.email || ""} onChange={(e) => set("email", e.target.value)} /></Field>
+          <Field label="Chave Pix (aparece nas mensagens de cobrança)"><Input value={f.chave_pix || ""} onChange={(e) => set("chave_pix", e.target.value)} placeholder="CPF, e-mail, telefone ou chave aleatória" /></Field>
           <Field label="Moeda"><Select value={f.moeda} onChange={(e) => set("moeda", e.target.value)}><option value="BRL">Real (R$)</option></Select></Field>
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 18 }}>

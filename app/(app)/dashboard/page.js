@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { TrendingUp, CheckCircle2, Clock, ListChecks } from "lucide-react";
+import { TrendingUp, CheckCircle2, Clock, ListChecks, Receipt, PiggyBank } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { useTheme, chartColors } from "@/lib/theme";
 import { StatCard, Card, EmptyState, Badge } from "@/components/ui";
-import { STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, statusFinanceiroEmpresa, MESES_ABREV } from "@/lib/helpers";
+import { STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, statusFinanceiroEmpresa, MESES_ABREV, recebidoNoMes, despesasDoMes } from "@/lib/helpers";
 
 export default function DashboardPage() {
   const { userId } = useAuth();
@@ -20,12 +20,13 @@ export default function DashboardPage() {
   const [clientes, setClientes] = useState([]);
   const [listas, setListas] = useState([]);
   const [tarefas, setTarefas] = useState([]);
+  const [despesas, setDespesas] = useState([]);
 
   useEffect(() => { if (userId) load(); }, [userId]);
 
   async function load() {
     setLoading(true);
-    const [{ data: d }, { data: pf }, { data: te }, { data: e }, { data: c }, { data: l }, { data: t }] = await Promise.all([
+    const [{ data: d }, { data: pf }, { data: te }, { data: e }, { data: c }, { data: l }, { data: t }, { data: desp }] = await Promise.all([
       supabase.from("demandas_freela").select("*"),
       supabase.from("pagamentos_freela").select("*"),
       supabase.from("trabalhos_empresa").select("*"),
@@ -33,8 +34,9 @@ export default function DashboardPage() {
       supabase.from("clientes").select("*"),
       supabase.from("listas_demandas").select("*"),
       supabase.from("tarefas").select("*"),
+      supabase.from("despesas").select("*"),
     ]);
-    setDemandas(d || []); setPagamentosFreela(pf || []); setTrabalhos(te || []); setEmpresas(e || []); setClientes(c || []); setListas(l || []); setTarefas(t || []);
+    setDemandas(d || []); setPagamentosFreela(pf || []); setTrabalhos(te || []); setEmpresas(e || []); setClientes(c || []); setListas(l || []); setTarefas(t || []); setDespesas(desp || []);
     setLoading(false);
   }
 
@@ -58,6 +60,10 @@ export default function DashboardPage() {
   const pendEmpresa = empresaMes.filter((t) => !t.pago).reduce((a, t) => a + Number(t.valor || 0), 0);
   const pendTotal = pendFreela + pendEmpresa;
   const recTotal = fatTotal - pendTotal;
+
+  const despMes = despesasDoMes(despesas, curYear, curMonth).reduce((a, x) => a + Number(x.valor || 0), 0);
+  const recebidoCaixa = recebidoNoMes(pagamentosFreela, trabalhos, curYear, curMonth).total;
+  const lucroMes = recebidoCaixa - despMes;
 
   const today = todayISO();
   const listaHoje = listas.find((l) => l.data === today);
@@ -99,6 +105,11 @@ export default function DashboardPage() {
         <StatCard label="Faturamento Empresas" value={toBRL(fatEmpresa)} />
         <StatCard label="Pagamentos pendentes" value={pagamentosPendentes} accent="#F59E0B" />
         <StatCard label="Pagamentos atrasados" value={pagamentosAtrasados} accent="#F0506E" />
+      </div>
+
+      <div className="grid-4" style={{ marginTop: 14 }}>
+        <StatCard label="Despesas do mês" value={toBRL(despMes)} icon={Receipt} accent="#F0506E" />
+        <StatCard label="Lucro do mês" value={toBRL(lucroMes)} icon={PiggyBank} accent={lucroMes < 0 ? "#F0506E" : C.accent} sub="Recebido no mês menos despesas" />
       </div>
 
       <div className="grid-2" style={{ marginTop: 18 }}>
