@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Gestão Financeira | Designer",
-  description: "Sistema de gestão para designer freelancer",
+  title: "Zentrix Flow",
+  description: "Financeiro, demandas e contratos para quem presta serviço",
 };
 
 export default function RootLayout({ children }) {
