@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/ui";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabaseClient";
 
-const LOGO_SRC = "/logo.svg";
+const LOGO_SRC = "/logo.png";
 
 const TOPO = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -42,8 +42,8 @@ export default function AppLayout({ children }) {
       {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
       <div className={`sidebar ${open ? "open" : ""}`}>
         <div className="brand">
-          <img className="logo-dark" src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 140, height: "auto" }} />
-          <img className="logo-light" src="/logo-light.svg" alt="Zentrix Flow" style={{ width: 140, height: "auto" }} />
+          <img className="logo-dark" src={LOGO_SRC} alt="Zentrix Flow" style={{ width: 150, height: "auto" }} />
+          <img className="logo-light" src="/logo-light.png" alt="Zentrix Flow" style={{ width: 150, height: "auto" }} />
         </div>
         <div className="nav">
           {TOPO.map((n) => (

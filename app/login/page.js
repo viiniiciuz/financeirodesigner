@@ -35,15 +35,15 @@ export default function LoginPage() {
     <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", padding: 16 }}>
       <div style={{ position: "absolute", top: 16, right: 16 }}><ThemeToggle /></div>
       <Card style={{ padding: 32, width: 400, maxWidth: "100%", boxShadow: "none" }}>
-        <img className="logo-dark" src="/logo.svg" alt="Zentrix Flow" style={{ height: 52, marginBottom: 18 }} />
-        <img className="logo-light" src="/logo-light.svg" alt="Zentrix Flow" style={{ height: 52, marginBottom: 18 }} />
+        <img className="logo-dark" src="/logo.png" alt="Zentrix Flow" style={{ height: 46, marginBottom: 20 }} />
+        <img className="logo-light" src="/logo-light.png" alt="Zentrix Flow" style={{ height: 46, marginBottom: 20 }} />
         <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 4 }}>{mode === "login" ? "Entrar" : "Criar conta"}</div>
         <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20 }}>Financeiro, demandas e contratos para quem presta serviço</div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Field label="E-mail"><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
           <Field label="Senha"><Input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
-          {error && <div style={{ color: "#FF7A93", fontSize: 12.5 }}>{error}</div>}
-          {msg && <div style={{ color: "#2DD4A0", fontSize: 12.5 }}>{msg}</div>}
+          {error && <div style={{ color: "#D98A87", fontSize: 12.5 }}>{error}</div>}
+          {msg && <div style={{ color: "#7FB89A", fontSize: 12.5 }}>{msg}</div>}
           <Button type="submit" disabled={loading} style={{ justifyContent: "center", marginTop: 4 }}>
             {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta"}
           </Button>

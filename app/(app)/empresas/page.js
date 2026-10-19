@@ -75,7 +75,7 @@ export default function EmpresasPage() {
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border)" }}>
                   <div><div style={{ fontSize: 11, color: "var(--muted)" }}>Faturado total</div><div style={{ fontWeight: 700 }}>{toBRL(total)}</div></div>
-                  <Badge color={e.ativo ? "#22C55E" : "#8B96AB"} bg={e.ativo ? "rgba(34,197,94,0.14)" : "rgba(139,150,171,0.14)"}>{e.ativo ? "Ativa" : "Inativa"}</Badge>
+                  <Badge color={e.ativo ? "#7FB89A" : "#8B96AB"} bg={e.ativo ? "rgba(127,184,154,0.14)" : "rgba(139,150,171,0.14)"}>{e.ativo ? "Ativa" : "Inativa"}</Badge>
                 </div>
               </Card>
             );

@@ -95,21 +95,21 @@ export default function DashboardPage() {
     <div>
       <div className="grid-4">
         <StatCard label="Faturamento do mês" value={toBRL(fatTotal)} icon={TrendingUp} accent={C.accent} />
-        <StatCard label="Total recebido" value={toBRL(recTotal)} icon={CheckCircle2} accent="#2DD4A0" />
-        <StatCard label="Total pendente" value={toBRL(pendTotal)} icon={Clock} accent="#F59E0B" />
+        <StatCard label="Total recebido" value={toBRL(recTotal)} icon={CheckCircle2} accent="#7FB89A" />
+        <StatCard label="Total pendente" value={toBRL(pendTotal)} icon={Clock} accent="#D1A85F" />
         <StatCard label="Demandas de hoje" value={`${doneHoje}/${tarefasHoje.length}`} icon={ListChecks} accent={C.neutral} />
       </div>
 
       <div className="grid-4" style={{ marginTop: 14 }}>
         <StatCard label="Faturamento Freelancer" value={toBRL(fatFreela)} />
         <StatCard label="Faturamento Empresas" value={toBRL(fatEmpresa)} />
-        <StatCard label="Pagamentos pendentes" value={pagamentosPendentes} accent="#F59E0B" />
-        <StatCard label="Pagamentos atrasados" value={pagamentosAtrasados} accent="#F0506E" />
+        <StatCard label="Pagamentos pendentes" value={pagamentosPendentes} accent="#D1A85F" />
+        <StatCard label="Pagamentos atrasados" value={pagamentosAtrasados} accent="#C9726F" />
       </div>
 
       <div className="grid-4" style={{ marginTop: 14 }}>
-        <StatCard label="Despesas do mês" value={toBRL(despMes)} icon={Receipt} accent="#F0506E" />
-        <StatCard label="Lucro do mês" value={toBRL(lucroMes)} icon={PiggyBank} accent={lucroMes < 0 ? "#F0506E" : C.accent} sub="Recebido no mês menos despesas" />
+        <StatCard label="Despesas do mês" value={toBRL(despMes)} icon={Receipt} accent="#C9726F" />
+        <StatCard label="Lucro do mês" value={toBRL(lucroMes)} icon={PiggyBank} accent={lucroMes < 0 ? "#C9726F" : C.accent} sub="Recebido no mês menos despesas" />
       </div>
 
       <div className="grid-2" style={{ marginTop: 18 }}>

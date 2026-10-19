@@ -80,7 +80,7 @@ export default function ClientesPage() {
                   <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6 }}>Serviços: <span style={{ color: "var(--text)", fontWeight: 700 }}>{servicos.length}</span></div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                     <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Contratado</div><div style={{ fontWeight: 700, fontSize: 13, whiteSpace: "nowrap" }}>{toBRL(totalContratado)}</div></div>
-                    <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Pendente</div><div style={{ fontWeight: 700, fontSize: 13, color: "#F59E0B", whiteSpace: "nowrap" }}>{toBRL(totalContratado - totalRecebido)}</div></div>
+                    <div style={{ minWidth: 0 }}><div style={{ fontSize: 11, color: "var(--muted)" }}>Pendente</div><div style={{ fontWeight: 700, fontSize: 13, color: "#D1A85F", whiteSpace: "nowrap" }}>{toBRL(totalContratado - totalRecebido)}</div></div>
                   </div>
                 </div>
               </Card>

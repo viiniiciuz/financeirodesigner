@@ -37,7 +37,7 @@ export function StatCard({ label, value, sub, accent, icon: Icon }) {
         <div style={{ color: "var(--muted)", fontSize: 13, fontWeight: 500 }}>{label}</div>
         {Icon && <Icon size={16} style={{ color: accent || "var(--muted)", opacity: 0.8 }} />}
       </div>
-      <div style={{ fontSize: 24, fontWeight: 700, marginTop: 8, letterSpacing: "-0.02em" }}>{value}</div>
+      <div className="serif" style={{ fontSize: 32, fontWeight: 600, marginTop: 6, lineHeight: 1.1 }}>{value}</div>
       {sub && <div style={{ fontSize: 12.5, marginTop: 6, color: "var(--muted)" }}>{sub}</div>}
     </Card>
   );
@@ -45,15 +45,15 @@ export function StatCard({ label, value, sub, accent, icon: Icon }) {
 
 export function Button({ children, variant = "primary", onClick, style, type = "button", size = "md", disabled }) {
   const base = {
-    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 999, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
+    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 8, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
     border: "1px solid transparent", transition: "all .15s ease", opacity: disabled ? 0.6 : 1,
     padding: size === "sm" ? "6px 12px" : "9px 16px", fontSize: size === "sm" ? 12.5 : 13.5,
   };
   const variants = {
-    primary: { background: "#E1FE1C", color: "#101010" },
+    primary: { background: "var(--lime)", color: "var(--on-lime)" },
     secondary: { background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" },
     ghost: { background: "transparent", color: "var(--muted)" },
-    danger: { background: "rgba(240,80,110,0.12)", color: "#FF7A93", border: "1px solid rgba(240,80,110,0.32)" },
+    danger: { background: "rgba(217,138,135,0.12)", color: "var(--danger)", border: "1px solid rgba(217,138,135,0.35)" },
   };
   return <button type={type} disabled={disabled} onClick={onClick} style={{ ...base, ...variants[variant], ...style }}>{children}</button>;
 }
@@ -61,9 +61,9 @@ export function Button({ children, variant = "primary", onClick, style, type = "
 export function IconBtn({ icon: Icon, onClick, title, danger }) {
   return (
     <button title={title} onClick={onClick} style={{
-      width: 32, height: 32, borderRadius: 999, display: "inline-flex", alignItems: "center", justifyContent: "center",
+      width: 32, height: 32, borderRadius: 8, display: "inline-flex", alignItems: "center", justifyContent: "center",
       background: "var(--surface2)", border: "1px solid var(--border)", cursor: "pointer",
-      color: danger ? "#F87171" : "var(--muted)",
+      color: danger ? "var(--danger)" : "var(--muted)",
     }}><Icon size={14} /></button>
   );
 }
@@ -76,7 +76,7 @@ export function Field({ label, children, full }) {
 }
 
 const inputStyle = {
-  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 14, padding: "10px 14px",
+  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "10px 14px",
   color: "var(--text)", fontSize: 13.5, outline: "none", width: "100%", fontFamily: "inherit",
 };
 
@@ -96,7 +96,7 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
     onChange(num);
   };
   return (
-    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 14, padding: "0 14px", ...(style || {}) }}>
+    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "0 14px", ...(style || {}) }}>
       <span style={{ color: "var(--muted)", fontSize: 13.5, marginRight: 4 }}>R$</span>
       <input value={display} onChange={handleChange} placeholder={placeholder || "0,00"} inputMode="decimal"
         style={{ background: "none", border: "none", outline: "none", color: "var(--text)", fontSize: 13.5, padding: "9px 0", width: "100%", fontFamily: "inherit" }} />
@@ -126,7 +126,7 @@ export function Modal({ title, onClose, children, width = 640 }) {
 export function ProgressBar({ pct, color }) {
   return (
     <div style={{ height: 7, borderRadius: 99, background: "var(--surface2)", overflow: "hidden" }}>
-      <div style={{ height: "100%", width: `${pct}%`, background: color || "#E1FE1C", borderRadius: 99, transition: "width .3s ease" }} />
+      <div style={{ height: "100%", width: `${pct}%`, background: color || "var(--lime)", borderRadius: 99, transition: "width .3s ease" }} />
     </div>
   );
 }
@@ -156,7 +156,7 @@ export function FileField({ label, fileUrl, fileName, onUpload, onRemove, upload
           <Paperclip size={13} style={{ color: "var(--muted)" }} />
           <span style={{ fontSize: 12.5, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{fileName || "arquivo"}</span>
           <a href={fileUrl} target="_blank" rel="noreferrer" title="Visualizar" style={{ color: "var(--muted)" }}><Eye size={14} /></a>
-          <button onClick={onRemove} title="Excluir" style={{ background: "none", border: "none", color: "#F87171", cursor: "pointer" }}><Trash2 size={14} /></button>
+          <button onClick={onRemove} title="Excluir" style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer" }}><Trash2 size={14} /></button>
         </div>
       )}
     </Field>
@@ -169,7 +169,7 @@ export function ThemeToggle({ style }) {
   return (
     <button onClick={() => setTheme(light ? "dark" : "light")} title={light ? "Mudar para o modo noturno" : "Mudar para o modo claro"}
       aria-label="Alternar entre modo claro e noturno"
-      style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 999, cursor: "pointer", fontSize: 12.5, fontWeight: 600,
+      style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12.5, fontWeight: 600,
         background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)", ...style }}>
       {light ? <Moon size={15} /> : <Sun size={15} />} {light ? "Noturno" : "Claro"}
     </button>

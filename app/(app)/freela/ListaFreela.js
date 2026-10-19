@@ -129,8 +129,8 @@ function DemandaForm({ item, clientes, onClose, onSave }) {
           </>
         )}
         <div style={{ gridColumn: "1 / -1", display: "flex", gap: 14, padding: "10px 14px", background: "var(--surface2)", borderRadius: 8, border: "1px solid var(--border)" }}>
-          <div style={{ flex: 1 }}><div style={{ fontSize: 11.5, color: "var(--muted)" }}>Pago na entrada</div><div style={{ fontWeight: 700, fontSize: 15, color: "#22C55E" }}>{toBRL(isNew ? entradaValor : 0)}</div></div>
-          <div style={{ flex: 1 }}><div style={{ fontSize: 11.5, color: "var(--muted)" }}>Valor restante</div><div style={{ fontWeight: 700, fontSize: 15, color: "#F59E0B" }}>{toBRL(restante)}</div></div>
+          <div style={{ flex: 1 }}><div style={{ fontSize: 11.5, color: "var(--muted)" }}>Pago na entrada</div><div style={{ fontWeight: 700, fontSize: 15, color: "#7FB89A" }}>{toBRL(isNew ? entradaValor : 0)}</div></div>
+          <div style={{ flex: 1 }}><div style={{ fontSize: 11.5, color: "var(--muted)" }}>Valor restante</div><div style={{ fontWeight: 700, fontSize: 15, color: "#D1A85F" }}>{toBRL(restante)}</div></div>
         </div>
         <Field label="Status do trabalho"><Select value={f.status_trabalho} onChange={(e) => set("status_trabalho", e.target.value)}>{STATUS_TRABALHO.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}</Select></Field>
         <Field label="Observações" full><TextArea value={f.observacoes || ""} onChange={(e) => set("observacoes", e.target.value)} /></Field>
@@ -159,8 +159,8 @@ function PagamentosModal({ userId, item, pagamentos, onClose, onChange }) {
     <Modal title={`Pagamentos — ${item.cliente}`} onClose={onClose}>
       <div className="grid-3" style={{ marginBottom: 16 }}>
         <StatCard label="Valor total" value={toBRL(item.valor_total)} />
-        <StatCard label="Recebido" value={toBRL(rec)} accent="#22C55E" />
-        <StatCard label="Restante" value={toBRL(rest)} accent="#F59E0B" />
+        <StatCard label="Recebido" value={toBRL(rec)} accent="#7FB89A" />
+        <StatCard label="Restante" value={toBRL(rest)} accent="#D1A85F" />
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
         <Button size="sm" onClick={() => setShowAdd(true)}><Plus size={13} /> Adicionar pagamento</Button>

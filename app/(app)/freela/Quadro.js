@@ -7,7 +7,7 @@ import { Button, Badge, Modal, Field, Input, Select, TextArea, ProgressBar, Icon
 import { STATUS_TRABALHO, STATUS_FIN, PRIORIDADES, toBRL, toBRDate, todayISO, statusFinanceiroFreela, limparVazios } from "@/lib/helpers";
 
 const COLS = STATUS_TRABALHO.filter((s) => s.value !== "cancelado");
-const ETIQUETAS = ["#E1FE1C", "#3B82F6", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981", "#EF4444"];
+const ETIQUETAS = ["#EBE0CA", "#6F9BC8", "#A79BC9", "#C98BA5", "#D1A85F", "#7FB89A", "#C9726F"];
 const uid = () => Math.random().toString(36).slice(2, 10);
 const validStatus = (s) => (COLS.some((c) => c.value === s) ? s : "nao_iniciado");
 const statsDe = (list) => {
