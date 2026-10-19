@@ -37,7 +37,7 @@ export function StatCard({ label, value, sub, accent, icon: Icon }) {
         <div style={{ color: "var(--muted)", fontSize: 13, fontWeight: 500 }}>{label}</div>
         {Icon && <Icon size={16} style={{ color: accent || "var(--muted)", opacity: 0.8 }} />}
       </div>
-      <div className="serif" style={{ fontSize: 25, fontWeight: 700, marginTop: 8, lineHeight: 1.2 }}>{value}</div>
+      <div className="serif" style={{ fontSize: 24, fontWeight: 700, marginTop: 8, letterSpacing: "-0.02em" }}>{value}</div>
       {sub && <div style={{ fontSize: 12.5, marginTop: 6, color: "var(--muted)" }}>{sub}</div>}
     </Card>
   );
