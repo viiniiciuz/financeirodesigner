@@ -24,10 +24,9 @@ export default function DashboardPage() {
 
   useEffect(() => { if (userId) load(); }, [userId]);
 
-  // Olhinho: esconde os valores em R$ (a escolha fica salva neste aparelho)
-  const [oculto, setOculto] = useState(false);
-  useEffect(() => { try { setOculto(localStorage.getItem("zf-ocultar") === "1"); } catch {} }, []);
-  const alternarOculto = () => setOculto((o) => { const n = !o; try { localStorage.setItem("zf-ocultar", n ? "1" : "0"); } catch {} return n; });
+  // Olhinho: os valores em R$ começam escondidos toda vez que o dashboard abre; só aparecem ao clicar
+  const [oculto, setOculto] = useState(true);
+  const alternarOculto = () => setOculto((o) => !o);
   const money = (v) => (oculto ? "R$ ••••••" : toBRL(v));
 
   async function load() {
