@@ -4,10 +4,7 @@ export const metadata = {
   title: "Zentrix Flow",
   description: "Financeiro, demandas e contratos para quem presta serviço",
   icons: {
-    icon: [
-      { url: "/icon-light.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark.png", media: "(prefers-color-scheme: dark)" },
-    ],
+    icon: [{ url: "/icon-dark.png", sizes: "512x512", type: "image/png" }],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   appleWebApp: { capable: true, title: "Zentrix Flow", statusBarStyle: "black-translucent" },
