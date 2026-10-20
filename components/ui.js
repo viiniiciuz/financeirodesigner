@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { X, Upload, Paperclip, Eye, Trash2, Sun, Moon } from "lucide-react";
-import { useTheme } from "@/lib/theme";
+import { X, Upload, Paperclip, Eye, Trash2, Sun, Moon, Monitor } from "lucide-react";
+import { usePref } from "@/lib/theme";
 import { formatCentsToBR } from "@/lib/helpers";
 
 export function Badge({ color, bg, children }) {
@@ -163,15 +163,26 @@ export function FileField({ label, fileUrl, fileName, onUpload, onRemove, upload
   );
 }
 
-export function ThemeToggle({ style }) {
-  const [theme, setTheme] = useTheme();
-  const light = theme === "light";
+const TEMAS = [["auto", "Auto", Monitor], ["light", "Claro", Sun], ["dark", "Escuro", Moon]];
+
+// Computador: seletor "Auto · Claro · Escuro". Celular: um botão compacto que alterna entre os três.
+export function ThemeToggle() {
+  const [pref, setPref] = usePref();
+  const i = Math.max(0, TEMAS.findIndex((t) => t[0] === pref));
+  const [, nomeAtual, IconeAtual] = TEMAS[i];
+  const [proxVal, proxNome] = TEMAS[(i + 1) % 3];
   return (
-    <button onClick={() => setTheme(light ? "dark" : "light")} title={light ? "Mudar para o modo noturno" : "Mudar para o modo claro"}
-      aria-label="Alternar entre modo claro e noturno"
-      style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12.5, fontWeight: 600,
-        background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)", ...style }}>
-      {light ? <Moon size={15} /> : <Sun size={15} />} {light ? "Noturno" : "Claro"}
-    </button>
+    <>
+      <div className="theme-seg" role="radiogroup" aria-label="Tema do aplicativo">
+        {TEMAS.map(([v, nome, Icone]) => (
+          <button key={v} type="button" role="radio" aria-checked={pref === v} className={pref === v ? "on" : ""} onClick={() => setPref(v)}>
+            <Icone size={13} /> {nome}
+          </button>
+        ))}
+      </div>
+      <button type="button" className="theme-cycle" onClick={() => setPref(proxVal)} title={`Tema: ${nomeAtual}. Toque para ${proxNome}`} aria-label={`Tema: ${nomeAtual}. Toque para mudar para ${proxNome}`}>
+        <IconeAtual size={15} /> {nomeAtual}
+      </button>
+    </>
   );
 }
