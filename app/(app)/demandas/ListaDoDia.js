@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus, Check, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { Button, Card, EmptyState, IconBtn, Tag, Badge, Modal, Field, Input, Select, ProgressBar } from "@/components/ui";
-import { PRIORIDADES, toBRDate, todayISO, limparVazios } from "@/lib/helpers";
+import { PRIORIDADES, toBRDate, todayISO, diasAtrasISO, limparVazios } from "@/lib/helpers";
 
 export default function ListaDoDia() {
   const { userId } = useAuth();
@@ -20,6 +20,15 @@ export default function ListaDoDia() {
 
   useEffect(() => { if (userId) load(); }, [userId]);
 
+  // Se a página ficar aberta durante a meia-noite, vira o dia sozinha e leva as pendentes para a nova lista
+  const [hojeStr, setHojeStr] = useState(todayISO());
+  useEffect(() => {
+    const id = setInterval(() => { const h = todayISO(); setHojeStr((atual) => (atual === h ? atual : h)); }, 30000);
+    return () => clearInterval(id);
+  }, []);
+  const primeiraVez = useRef(true);
+  useEffect(() => { if (primeiraVez.current) { primeiraVez.current = false; return; } if (userId) load(); }, [hojeStr]); // eslint-disable-line
+
   async function load() {
     setLoading(true);
     await rolarPendentes();
@@ -33,10 +42,32 @@ export default function ListaDoDia() {
     setLoading(false);
   }
 
+
+  // Correção de um erro antigo: entre 21h e meia-noite o dia virava cedo demais (horário UTC) e criava a lista de "amanhã".
+  // Se existir essa lista automática, traz as tarefas dela de volta para a lista de hoje.
+  async function corrigirListaAdiantada(today) {
+    const amanha = diasAtrasISO(-1);
+    const { data: futuras } = await supabase.from("listas_demandas").select("id, titulo").eq("data", amanha);
+    const auto = (futuras || []).filter((l) => l.titulo === `Demandas de ${toBRDate(amanha)}`);
+    if (auto.length === 0) return;
+    const { data: hojeL } = await supabase.from("listas_demandas").select("id").eq("data", today).order("created_at", { ascending: true }).limit(1);
+    let destino = hojeL?.[0]?.id;
+    if (!destino) {
+      const { data: nova } = await supabase.from("listas_demandas").insert({ user_id: userId, titulo: `Demandas de ${toBRDate(today)}`, data: today }).select().single();
+      destino = nova?.id;
+    }
+    if (!destino) return;
+    for (const l of auto) {
+      await supabase.from("tarefas").update({ lista_id: destino }).eq("lista_id", l.id);
+      await supabase.from("listas_demandas").delete().eq("id", l.id);
+    }
+  }
+
   // Migra automaticamente tarefas não concluídas de dias passados para a lista de hoje.
   // Só some da lista antiga quando a tarefa é marcada como concluída.
   async function rolarPendentes() {
     const today = todayISO();
+    await corrigirListaAdiantada(today);
     const { data: listasAntigas } = await supabase.from("listas_demandas").select("id, data").lt("data", today);
     if (!listasAntigas || listasAntigas.length === 0) return;
 
@@ -66,9 +97,9 @@ export default function ListaDoDia() {
   const empresasMap = Object.fromEntries(empresas.map((e) => [e.id, e]));
   const tarefasDe = (listaId) => tarefas.filter((t) => t.lista_id === listaId);
 
-  const today = todayISO();
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+  const today = hojeStr;
+  const yesterday = diasAtrasISO(1);
+  const weekAgo = diasAtrasISO(7);
   const monthAgo = today.slice(0, 7) + "-01";
 
   const filteredListas = listas.filter((l) => {
