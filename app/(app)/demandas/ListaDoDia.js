@@ -11,6 +11,7 @@ export default function ListaDoDia() {
   const [listas, setListas] = useState([]);
   const [tarefas, setTarefas] = useState([]);
   const [empresas, setEmpresas] = useState([]);
+  const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState("hoje");
   const [customDate, setCustomDate] = useState(todayISO());
@@ -22,12 +23,13 @@ export default function ListaDoDia() {
   async function load() {
     setLoading(true);
     await rolarPendentes();
-    const [{ data: l }, { data: t }, { data: e }] = await Promise.all([
+    const [{ data: l }, { data: t }, { data: e }, { data: c }] = await Promise.all([
       supabase.from("listas_demandas").select("*").order("data", { ascending: false }),
       supabase.from("tarefas").select("*"),
       supabase.from("empresas").select("*"),
+      supabase.from("clientes").select("nome"),
     ]);
-    setListas(l || []); setTarefas(t || []); setEmpresas(e || []);
+    setListas(l || []); setTarefas(t || []); setEmpresas(e || []); setClientes(c || []);
     setLoading(false);
   }
 
@@ -147,7 +149,7 @@ export default function ListaDoDia() {
         </div>
       )}
       {novaListaOpen && <NovaListaForm onClose={() => setNovaListaOpen(false)} onSave={criarLista} />}
-      {addTarefaFor && <AddTarefaModal empresas={empresas} onClose={() => setAddTarefaFor(null)} onSave={addTarefa} />}
+      {addTarefaFor && <AddTarefaModal empresas={empresas} clientes={clientes} onClose={() => setAddTarefaFor(null)} onSave={addTarefa} />}
     </div>
   );
 }
@@ -171,7 +173,7 @@ function NovaListaForm({ onClose, onSave }) {
   );
 }
 
-function AddTarefaModal({ empresas, onClose, onSave }) {
+function AddTarefaModal({ empresas, clientes = [], onClose, onSave }) {
   const [desc, setDesc] = useState("");
   const [vinculoTipo, setVinculoTipo] = useState("nenhum");
   const [vinculoId, setVinculoId] = useState(empresas[0]?.id || "");
@@ -189,7 +191,7 @@ function AddTarefaModal({ empresas, onClose, onSave }) {
           </Select>
         </Field>
         {vinculoTipo === "empresa" && <Field label="Empresa"><Select value={vinculoId} onChange={(e) => setVinculoId(e.target.value)}>{empresas.map((e) => <option key={e.id} value={e.id}>{e.nome}</option>)}</Select></Field>}
-        {vinculoTipo === "cliente" && <Field label="Nome do cliente"><Input value={vinculoTexto} onChange={(e) => setVinculoTexto(e.target.value)} /></Field>}
+        {vinculoTipo === "cliente" && <Field label="Nome do cliente"><Input list="zf-clientes" value={vinculoTexto} onChange={(e) => setVinculoTexto(e.target.value)} placeholder="Escolha da lista ou digite" /><datalist id="zf-clientes">{clientes.map((c) => <option key={c.nome} value={c.nome} />)}</datalist></Field>}
         <Field label="Prioridade"><Select value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>{PRIORIDADES.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}</Select></Field>
       </div>
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
