@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { TrendingUp, CheckCircle2, Clock, ListChecks, Receipt, PiggyBank } from "lucide-react";
+import { TrendingUp, CheckCircle2, Clock, ListChecks, Receipt, PiggyBank, Eye, EyeOff } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { useTheme, chartColors } from "@/lib/theme";
-import { StatCard, Card, EmptyState, Badge } from "@/components/ui";
+import { StatCard, Card, EmptyState, Badge, IconBtn } from "@/components/ui";
 import { STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, statusFinanceiroEmpresa, MESES_ABREV, recebidoNoMes, despesasDoMes } from "@/lib/helpers";
 
 export default function DashboardPage() {
@@ -23,6 +23,12 @@ export default function DashboardPage() {
   const [despesas, setDespesas] = useState([]);
 
   useEffect(() => { if (userId) load(); }, [userId]);
+
+  // Olhinho: esconde os valores em R$ (a escolha fica salva neste aparelho)
+  const [oculto, setOculto] = useState(false);
+  useEffect(() => { try { setOculto(localStorage.getItem("zf-ocultar") === "1"); } catch {} }, []);
+  const alternarOculto = () => setOculto((o) => { const n = !o; try { localStorage.setItem("zf-ocultar", n ? "1" : "0"); } catch {} return n; });
+  const money = (v) => (oculto ? "R$ ••••••" : toBRL(v));
 
   async function load() {
     setLoading(true);
@@ -93,23 +99,26 @@ export default function DashboardPage() {
 
   return (
     <div>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        <IconBtn icon={oculto ? EyeOff : Eye} title={oculto ? "Mostrar valores" : "Ocultar valores"} onClick={alternarOculto} />
+      </div>
       <div className="grid-4">
-        <StatCard label="Faturamento do mês" value={toBRL(fatTotal)} icon={TrendingUp} accent={C.accent} />
-        <StatCard label="Total recebido" value={toBRL(recTotal)} icon={CheckCircle2} accent="#7FB89A" />
-        <StatCard label="Total pendente" value={toBRL(pendTotal)} icon={Clock} accent="#D1A85F" />
+        <StatCard label="Faturamento do mês" value={money(fatTotal)} icon={TrendingUp} accent={C.accent} />
+        <StatCard label="Total recebido" value={money(recTotal)} icon={CheckCircle2} accent="#7FB89A" />
+        <StatCard label="Total pendente" value={money(pendTotal)} icon={Clock} accent="#D1A85F" />
         <StatCard label="Demandas de hoje" value={`${doneHoje}/${tarefasHoje.length}`} icon={ListChecks} accent={C.neutral} />
       </div>
 
       <div className="grid-4" style={{ marginTop: 14 }}>
-        <StatCard label="Faturamento Freelancer" value={toBRL(fatFreela)} />
-        <StatCard label="Faturamento Empresas" value={toBRL(fatEmpresa)} />
+        <StatCard label="Faturamento Freelancer" value={money(fatFreela)} />
+        <StatCard label="Faturamento Empresas" value={money(fatEmpresa)} />
         <StatCard label="Pagamentos pendentes" value={pagamentosPendentes} accent="#D1A85F" />
         <StatCard label="Pagamentos atrasados" value={pagamentosAtrasados} accent="#C9726F" />
       </div>
 
       <div className="grid-4" style={{ marginTop: 14 }}>
-        <StatCard label="Despesas do mês" value={toBRL(despMes)} icon={Receipt} accent="#C9726F" />
-        <StatCard label="Lucro do mês" value={toBRL(lucroMes)} icon={PiggyBank} accent={lucroMes < 0 ? "#C9726F" : C.accent} sub="Recebido no mês menos despesas" />
+        <StatCard label="Despesas do mês" value={money(despMes)} icon={Receipt} accent="#C9726F" />
+        <StatCard label="Lucro do mês" value={money(lucroMes)} icon={PiggyBank} accent={lucroMes < 0 ? "#C9726F" : C.accent} sub="Recebido no mês menos despesas" />
       </div>
 
       <div className="grid-2" style={{ marginTop: 18 }}>
@@ -119,8 +128,8 @@ export default function DashboardPage() {
             <BarChart data={chartData}>
               <CartesianGrid stroke={C.grid} strokeDasharray="4 4" vertical={false} />
               <XAxis dataKey="name" stroke={C.axis} fontSize={11.5} tickLine={false} axisLine={false} />
-              <YAxis stroke={C.axis} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-              <Tooltip contentStyle={{ background: C.tipBg, border: `1px solid ${C.tipBorder}`, borderRadius: 12, fontSize: 12.5, color: C.tipText }} itemStyle={{ color: C.tipText }} cursor={{ fill: C.cursor }} formatter={(v) => toBRL(v)} />
+              <YAxis stroke={C.axis} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => (oculto ? "•••" : `${(v / 1000).toFixed(0)}k`)} />
+              <Tooltip contentStyle={{ background: C.tipBg, border: `1px solid ${C.tipBorder}`, borderRadius: 12, fontSize: 12.5, color: C.tipText }} itemStyle={{ color: C.tipText }} cursor={{ fill: C.cursor }} formatter={(v) => money(v)} />
               <Bar dataKey="total" radius={[10, 10, 0, 0]} fill={C.bar} />
             </BarChart>
           </ResponsiveContainer>
@@ -132,7 +141,7 @@ export default function DashboardPage() {
               <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={80} paddingAngle={3}>
                 {pieData.map((p, i) => <Cell key={i} fill={p.color} stroke="none" />)}
               </Pie>
-              <Tooltip contentStyle={{ background: C.tipBg, border: `1px solid ${C.tipBorder}`, borderRadius: 12, fontSize: 12.5, color: C.tipText }} itemStyle={{ color: C.tipText }} cursor={{ fill: C.cursor }} formatter={(v) => toBRL(v)} />
+              <Tooltip contentStyle={{ background: C.tipBg, border: `1px solid ${C.tipBorder}`, borderRadius: 12, fontSize: 12.5, color: C.tipText }} itemStyle={{ color: C.tipText }} cursor={{ fill: C.cursor }} formatter={(v) => money(v)} />
             </PieChart>
           </ResponsiveContainer>
         </Card>
@@ -149,7 +158,7 @@ export default function DashboardPage() {
                   <div style={{ fontSize: 11.5, color: "var(--muted)" }}>Vencimento: {toBRDate(p.venc)}</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
-                  <div style={{ fontWeight: 700, fontSize: 13 }}>{toBRL(p.valor)}</div>
+                  <div style={{ fontWeight: 700, fontSize: 13 }}>{money(p.valor)}</div>
                   <Badge color={STATUS_FIN[p.status].color} bg={STATUS_FIN[p.status].bg}>{STATUS_FIN[p.status].label}</Badge>
                 </div>
               </div>
