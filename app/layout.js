@@ -10,7 +10,7 @@ export const metadata = {
   appleWebApp: { capable: true, title: "Zentrix Flow", statusBarStyle: "black-translucent" },
 };
 
-export const viewport = { themeColor: "#011121" };
+export const viewport = { themeColor: "#032446" };
 
 export default function RootLayout({ children }) {
   return (
