@@ -22,11 +22,11 @@ export default function LoginPage() {
     setError(""); setMsg(""); setLoading(true);
     if (mode === "login") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError(error.message); else router.replace("/dashboard");
+      if (error) setError("E-mail ou senha incorretos."); else router.replace("/dashboard");
     } else {
       const { error } = await supabase.auth.signUp({ email, password });
-      if (error) setError(error.message);
-      else setMsg("Conta criada! Verifique seu e-mail para confirmar (ou já faça login se a confirmação estiver desativada no seu projeto Supabase).");
+      if (error) setError("Não foi possível criar a conta. Verifique os dados e tente de novo.");
+      else setMsg("Pedido enviado. Se o e-mail for novo, você receberá a confirmação; caso contrário, tente entrar.");
     }
     setLoading(false);
   };
@@ -41,7 +41,7 @@ export default function LoginPage() {
         <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20 }}>Financeiro, demandas e contratos para quem presta serviço</div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Field label="E-mail"><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
-          <Field label="Senha"><Input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+          <Field label="Senha"><Input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
           {error && <div style={{ color: "#D98A87", fontSize: 12.5 }}>{error}</div>}
           {msg && <div style={{ color: "#7FB89A", fontSize: 12.5 }}>{msg}</div>}
           <Button type="submit" disabled={loading} style={{ justifyContent: "center", marginTop: 4 }}>
