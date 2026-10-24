@@ -3,12 +3,12 @@ const supaHost = supa ? new URL(supa).origin : "https://*.supabase.co";
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: " + supaHost,
   "font-src 'self' data: https://fonts.gstatic.com",
-  `connect-src 'self' ${supaHost} wss://${supaHost.replace(/^https?:\/\//, "")}`,
-  "frame-src 'self' " + supaHost,
+  `connect-src 'self' ${supaHost} wss://${supaHost.replace(/^https?:\/\//, "")} https://challenges.cloudflare.com`,
+  "frame-src 'self' https://challenges.cloudflare.com " + supaHost,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

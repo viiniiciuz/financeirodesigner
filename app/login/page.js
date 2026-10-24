@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { Button, Input, Field, Card, ThemeToggle } from "@/components/ui";
@@ -12,6 +12,37 @@ export default function LoginPage() {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const [captcha, setCaptcha] = useState("");
+  const boxRef = useRef(null);
+  const widgetId = useRef(null);
+
+  // CAPTCHA (Cloudflare Turnstile): só aparece se a chave do site estiver configurada
+  useEffect(() => {
+    if (!SITE_KEY || !boxRef.current) return;
+    const render = () => {
+      if (!window.turnstile || widgetId.current !== null || !boxRef.current) return;
+      widgetId.current = window.turnstile.render(boxRef.current, {
+        sitekey: SITE_KEY,
+        callback: (t) => setCaptcha(t),
+        "expired-callback": () => setCaptcha(""),
+        "error-callback": () => setCaptcha(""),
+      });
+    };
+    if (window.turnstile) { render(); return; }
+    let sc = document.getElementById("cf-turnstile");
+    if (!sc) {
+      sc = document.createElement("script");
+      sc.id = "cf-turnstile";
+      sc.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      sc.async = true;
+      document.head.appendChild(sc);
+    }
+    sc.addEventListener("load", render);
+    return () => sc.removeEventListener("load", render);
+  }, [SITE_KEY]);
+
+  const resetCaptcha = () => { setCaptcha(""); try { if (window.turnstile && widgetId.current !== null) window.turnstile.reset(widgetId.current); } catch {} };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => { if (data.session) router.replace("/dashboard"); });
@@ -19,16 +50,20 @@ export default function LoginPage() {
 
   const submit = async (e) => {
     e.preventDefault();
-    setError(""); setMsg(""); setLoading(true);
+    setError(""); setMsg("");
+    if (SITE_KEY && !captcha) { setError("Confirme a verificação de segurança."); return; }
+    setLoading(true);
+    const options = SITE_KEY ? { captchaToken: captcha } : undefined;
     if (mode === "login") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password, options });
       if (error) setError("E-mail ou senha incorretos."); else router.replace("/dashboard");
     } else {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({ email, password, options });
       if (error) setError("Não foi possível criar a conta. Verifique os dados e tente de novo.");
       else setMsg("Pedido enviado. Se o e-mail for novo, você receberá a confirmação; caso contrário, tente entrar.");
     }
     setLoading(false);
+    resetCaptcha();
   };
 
   return (
@@ -42,6 +77,7 @@ export default function LoginPage() {
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Field label="E-mail"><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
           <Field label="Senha"><Input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+          {SITE_KEY && <div ref={boxRef} />}
           {error && <div style={{ color: "#D98A87", fontSize: 12.5 }}>{error}</div>}
           {msg && <div style={{ color: "#7FB89A", fontSize: 12.5 }}>{msg}</div>}
           <Button type="submit" disabled={loading} style={{ justifyContent: "center", marginTop: 4 }}>
