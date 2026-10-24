@@ -30,11 +30,11 @@ export default function EmpresasPage() {
     const payload = limparVazios({ ...item, user_id: userId }, ["valor_padrao"]);
     if (item.id) {
       const { error } = await supabase.from("empresas").update(payload).eq("id", item.id);
-      if (error) { alert("Não foi possível salvar: " + error.message); return; }
+      if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
     } else {
       delete payload.id;
       const { error } = await supabase.from("empresas").insert(payload);
-      if (error) { alert("Não foi possível salvar: " + error.message); return; }
+      if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
       // sincroniza: se ainda não existir um cliente com esse nome, cria um também
       const { data: existente } = await supabase.from("clientes").select("id").eq("nome", item.nome).maybeSingle();
       if (!existente) {

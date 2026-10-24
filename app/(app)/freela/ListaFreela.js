@@ -36,11 +36,11 @@ export default function ListaFreela() {
     let demandaId = item.id;
     if (item.id) {
       const { error } = await supabase.from("demandas_freela").update(payload).eq("id", item.id);
-      if (error) { alert("Não foi possível salvar: " + error.message); return; }
+      if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
     } else {
       delete payload.id;
       const { data, error } = await supabase.from("demandas_freela").insert(payload).select().single();
-      if (error) { alert("Não foi possível salvar: " + error.message); return; }
+      if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
       demandaId = data.id;
     }
     if (entrada && entrada.valor > 0) {
@@ -150,7 +150,7 @@ function PagamentosModal({ userId, item, pagamentos, onClose, onChange }) {
 
   const addPagamento = async (p) => {
     const { error } = await supabase.from("pagamentos_freela").insert(limparVazios({ demanda_id: item.id, user_id: userId, ...p }, ["valor"]));
-    if (error) { alert("Não foi possível salvar o pagamento: " + error.message); return; }
+    if (error) { alert("Não foi possível salvar o pagamento. Tente novamente."); return; }
     setShowAdd(false); onChange();
   };
   const removePagamento = async (p) => { if (p.comprovante_path) await removeArquivo(p.comprovante_path); await supabase.from("pagamentos_freela").delete().eq("id", p.id); onChange(); };

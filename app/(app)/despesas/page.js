@@ -53,7 +53,7 @@ export default function DespesasPage() {
     const { error } = item.id
       ? await supabase.from("despesas").update(payload).eq("id", item.id)
       : await supabase.from("despesas").insert(payload);
-    if (error) { alert("Não foi possível salvar: " + error.message); return; }
+    if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
     setModal(null); load();
   };
   const excluir = async (id) => { if (!confirm("Excluir esta despesa?")) return; await supabase.from("despesas").delete().eq("id", id); load(); };

@@ -21,7 +21,7 @@ export default function ConfiguracoesPage() {
 
   const salvar = async () => {
     const { error } = await supabase.from("config").upsert({ ...f, user_id: userId, updated_at: new Date().toISOString() });
-    if (error) { alert("Não foi possível salvar: " + error.message + (error.message.includes("chave_pix") ? "\n\nRode o arquivo supabase/migracao-003.sql no Supabase." : "")); return; }
+    if (error) { alert("Não foi possível salvar. Tente novamente." + (error.message.includes("chave_pix") ? "\n\nRode o arquivo supabase/migracao-003.sql no Supabase." : "")); return; }
     alert("Configurações salvas!");
   };
 

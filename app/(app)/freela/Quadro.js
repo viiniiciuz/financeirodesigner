@@ -185,7 +185,7 @@ export default function Quadro({ onAbrirLista }) {
       ? supabase.from("demandas_freela").update({ status_trabalho: toStatus, quadro_pos: pos }).eq("id", it.id)
       : supabase.from("quadro_cards").update({ status: toStatus, posicao: pos }).eq("id", it.id)));
     const falha = results.find((r) => r.error);
-    if (falha) { alert("Não foi possível mover o cartão: " + falha.error.message); load(); }
+    if (falha) { alert("Não foi possível mover o cartão: . Tente novamente."); load(); }
   }
 
   function indexFromEvent(e, colEl, excludeKey) {
@@ -202,7 +202,7 @@ export default function Quadro({ onAbrirLista }) {
     if (!titulo) return;
     const pos = colItems(status).reduce((m, i) => Math.max(m, i.pos), 0) + 10;
     const { error } = await supabase.from("quadro_cards").insert({ user_id: userId, titulo, status, posicao: pos });
-    if (error) { alert("Não foi possível salvar: " + error.message); return; }
+    if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
     setNovoTitulo(""); setAddingIn(null); load();
   }
 
@@ -212,17 +212,17 @@ export default function Quadro({ onAbrirLista }) {
       const payload = limparVazios({ status_trabalho: f.status_trabalho, prazo_entrega: f.prazo_entrega, checklist: f.checklist });
       if (mudouColuna) payload.quadro_pos = colItems(f.status_trabalho).reduce((m, i) => Math.max(m, i.pos), 0) + 10;
       const { error } = await supabase.from("demandas_freela").update(payload).eq("id", item.id);
-      if (error) { alert("Não foi possível salvar: " + error.message); return; }
+      if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
     } else {
       if (!f.titulo.trim()) { alert("Dê um título ao cartão."); return; }
       const payload = limparVazios({ ...f, user_id: userId });
       if (item) {
         const { error } = await supabase.from("quadro_cards").update(payload).eq("id", item.id);
-        if (error) { alert("Não foi possível salvar: " + error.message); return; }
+        if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
       } else {
         payload.posicao = colItems(f.status).reduce((m, i) => Math.max(m, i.pos), 0) + 10;
         const { error } = await supabase.from("quadro_cards").insert(payload);
-        if (error) { alert("Não foi possível salvar: " + error.message); return; }
+        if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
       }
     }
     setModal(null); load();

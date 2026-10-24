@@ -111,11 +111,11 @@ export default function ListaDoDia() {
     return true;
   });
 
-  const criarLista = async (lista) => { const { error } = await supabase.from("listas_demandas").insert(limparVazios({ ...lista, user_id: userId })); if (error) { alert("Não foi possível salvar: " + error.message); return; } setNovaListaOpen(false); load(); };
+  const criarLista = async (lista) => { const { error } = await supabase.from("listas_demandas").insert(limparVazios({ ...lista, user_id: userId })); if (error) { alert("Não foi possível salvar. Tente novamente."); return; } setNovaListaOpen(false); load(); };
   const removerLista = async (id) => { if (!confirm("Excluir esta lista?")) return; await supabase.from("listas_demandas").delete().eq("id", id); load(); };
   const toggleTarefa = async (t) => { await supabase.from("tarefas").update({ concluida: !t.concluida }).eq("id", t.id); load(); };
   const removerTarefa = async (id) => { await supabase.from("tarefas").delete().eq("id", id); load(); };
-  const addTarefa = async (t) => { const { error } = await supabase.from("tarefas").insert(limparVazios({ ...t, lista_id: addTarefaFor, user_id: userId })); if (error) { alert("Não foi possível salvar: " + error.message); return; } setAddTarefaFor(null); load(); };
+  const addTarefa = async (t) => { const { error } = await supabase.from("tarefas").insert(limparVazios({ ...t, lista_id: addTarefaFor, user_id: userId })); if (error) { alert("Não foi possível salvar. Tente novamente."); return; } setAddTarefaFor(null); load(); };
 
   return (
     <div>

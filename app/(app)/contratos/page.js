@@ -136,7 +136,7 @@ function NovoModal({ userId, config, demandas, modelos, onClose, onCriado }) {
     }, ["valor"]);
     const { data, error } = await supabase.from("contratos").insert(payload).select().single();
     setSalvando(false);
-    if (error) { alert("Não foi possível criar: " + error.message); return; }
+    if (error) { alert("Não foi possível criar. Tente novamente."); return; }
     onCriado(data);
   };
 
@@ -186,7 +186,7 @@ function EditorModal({ contrato, userId, onClose }) {
 
   const salvar = async () => {
     const { error } = await supabase.from("contratos").update({ titulo, conteudo: texto, status, updated_at: new Date().toISOString() }).eq("id", contrato.id);
-    if (error) { alert("Não foi possível salvar: " + error.message); return false; }
+    if (error) { alert("Não foi possível salvar. Tente novamente."); return false; }
     setSalvo(true); return true;
   };
   const imprimir = async () => { if (!salvo) await salvar(); const t = document.title; document.title = titulo; window.print(); document.title = t; };
@@ -194,7 +194,7 @@ function EditorModal({ contrato, userId, onClose }) {
     const nome = prompt("Nome do modelo:", titulo.replace(/ — .*/, ""));
     if (!nome) return;
     const { error } = await supabase.from("contrato_modelos").insert({ user_id: userId, nome, tipo: contrato.tipo || "contrato", conteudo: virarModelo(texto, contrato.vars) });
-    alert(error ? "Não foi possível salvar o modelo: " + error.message : "Modelo salvo! Ele aparece em “Meus modelos” ao criar um novo documento.");
+    alert(error ? "Não foi possível salvar o modelo. Tente novamente." : "Modelo salvo! Ele aparece em “Meus modelos” ao criar um novo documento.");
   };
   const fechar = async () => { if (!salvo && confirm("Salvar as alterações antes de fechar?")) await salvar(); onClose(); };
 

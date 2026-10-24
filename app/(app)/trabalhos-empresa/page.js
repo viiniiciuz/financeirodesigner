@@ -31,7 +31,7 @@ export default function TrabalhosEmpresaPage() {
     let error;
     if (item.id) ({ error } = await supabase.from("trabalhos_empresa").update(payload).eq("id", item.id));
     else { delete payload.id; ({ error } = await supabase.from("trabalhos_empresa").insert(payload)); }
-    if (error) { alert("Não foi possível salvar: " + error.message); return; }
+    if (error) { alert("Não foi possível salvar. Tente novamente."); return; }
     setModal(null); load();
   };
   const removeItem = async (id) => { if (!confirm("Excluir este trabalho?")) return; await supabase.from("trabalhos_empresa").delete().eq("id", id); load(); };
