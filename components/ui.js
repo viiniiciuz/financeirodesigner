@@ -45,7 +45,7 @@ export function StatCard({ label, value, sub, accent, icon: Icon }) {
 
 export function Button({ children, variant = "primary", onClick, style, type = "button", size = "md", disabled }) {
   const base = {
-    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 8, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
+    display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 12, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
     border: "1px solid transparent", transition: "all .15s ease", opacity: disabled ? 0.6 : 1,
     padding: size === "sm" ? "6px 12px" : "9px 16px", fontSize: size === "sm" ? 12.5 : 13.5,
   };
@@ -61,7 +61,7 @@ export function Button({ children, variant = "primary", onClick, style, type = "
 export function IconBtn({ icon: Icon, onClick, title, danger }) {
   return (
     <button title={title} onClick={onClick} style={{
-      width: 32, height: 32, borderRadius: 8, display: "inline-flex", alignItems: "center", justifyContent: "center",
+      width: 32, height: 32, borderRadius: 12, display: "inline-flex", alignItems: "center", justifyContent: "center",
       background: "var(--surface2)", border: "1px solid var(--border)", cursor: "pointer",
       color: danger ? "var(--danger)" : "var(--muted)",
     }}><Icon size={14} /></button>
@@ -76,7 +76,7 @@ export function Field({ label, children, full }) {
 }
 
 const inputStyle = {
-  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "10px 14px",
+  background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 12, padding: "10px 14px",
   color: "var(--text)", fontSize: 13.5, outline: "none", width: "100%", fontFamily: "inherit",
 };
 
@@ -96,7 +96,7 @@ export function CurrencyInput({ value, onChange, placeholder, style }) {
     onChange(num);
   };
   return (
-    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "0 14px", ...(style || {}) }}>
+    <div style={{ display: "flex", alignItems: "center", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 12, padding: "0 14px", ...(style || {}) }}>
       <span style={{ color: "var(--muted)", fontSize: 13.5, marginRight: 4 }}>R$</span>
       <input value={display} onChange={handleChange} placeholder={placeholder || "0,00"} inputMode="decimal"
         style={{ background: "none", border: "none", outline: "none", color: "var(--text)", fontSize: 13.5, padding: "9px 0", width: "100%", fontFamily: "inherit" }} />
@@ -152,7 +152,7 @@ export function FileField({ label, fileUrl, fileName, onUpload, onRemove, upload
           </Button>
         </div>
       ) : (
-        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 8, padding: "7px 10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 12, padding: "7px 10px" }}>
           <Paperclip size={13} style={{ color: "var(--muted)" }} />
           <span style={{ fontSize: 12.5, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{fileName || "arquivo"}</span>
           <a href={fileUrl} target="_blank" rel="noreferrer" title="Visualizar" style={{ color: "var(--muted)" }}><Eye size={14} /></a>

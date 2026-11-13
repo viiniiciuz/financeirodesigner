@@ -68,7 +68,7 @@ function CardModal({ item, novoStatus, pagamentos, onClose, onSave, onDelete, on
     <Modal title={freela ? "Demanda freela" : item ? "Editar cartão" : "Novo cartão"} onClose={onClose} width={620}>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {freela ? (
-          <div className="card" style={{ padding: 14, background: "var(--surface2)", borderRadius: 16 }}>
+          <div className="card" style={{ padding: 14, background: "var(--surface2)", borderRadius: 20 }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{raw.cliente}</div>

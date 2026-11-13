@@ -200,7 +200,7 @@ function AddPagamentoForm({ userId, onSave, onCancel }) {
   };
 
   return (
-    <div style={{ marginTop: 14, padding: 14, background: "var(--surface2)", borderRadius: 10, border: "1px solid var(--border)" }}>
+    <div style={{ marginTop: 14, padding: 14, background: "var(--surface2)", borderRadius: 14, border: "1px solid var(--border)" }}>
       <div className="form-grid">
         <Field label="Valor"><CurrencyInput value={valor} onChange={setValor} /></Field>
         <Field label="Data"><Input type="date" value={dataP} onChange={(e) => setDataP(e.target.value)} /></Field>
