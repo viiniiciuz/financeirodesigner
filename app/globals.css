@@ -2,29 +2,29 @@
 
 * { box-sizing: border-box; }
 html, body { padding: 0; margin: 0; }
-/* Identidade: azul-marinho e creme. Tema claro é o padrão; o escuro entra pelo sistema (Auto) ou pela escolha do usuário. */
+/* Identidade: verde-azulado (teal) sobre fundos azul-acinzentados claros. Tema claro é o padrão; o escuro entra pelo sistema (Auto) ou pela escolha do usuário. */
 :root {
-  --bg: #F4EFE3; --surface: #FCFAF4; --surface2: #EEE7D6; --sidebar: #FCFAF4;
-  --border: rgba(3,36,70,0.12); --border-strong: rgba(3,36,70,0.32); --hover: rgba(3,36,70,0.045);
-  --text: #0B1B2E; --muted: #66707F; --success: #3F7D5F; --danger: #B5504D;
-  --lime: #032446; --lime-soft: #0A3566; --on-lime: #EBE0CA; --accent-text: #032446;
-  --overlay: rgba(1,17,33,0.5); --scroll: rgba(3,36,70,0.22); color-scheme: light;
+  --bg: #E6EEF1; --surface: #FFFFFF; --surface2: #E7F1F2; --sidebar: #FFFFFF;
+  --border: rgba(22,78,92,0.12); --border-strong: rgba(22,78,92,0.32); --hover: rgba(22,78,92,0.05);
+  --text: #12303A; --muted: #60767E; --success: #2F8F6B; --danger: #C0504D;
+  --lime: #1D6A7B; --lime-soft: #2A7F92; --on-lime: #FFFFFF; --accent-text: #1D6A7B;
+  --overlay: rgba(6,24,30,0.5); --scroll: rgba(22,78,92,0.25); color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-  --bg: #011121; --surface: #051B31; --surface2: #0A2440; --sidebar: #010D1A;
-  --border: rgba(235,224,202,0.11); --border-strong: rgba(235,224,202,0.30); --hover: rgba(235,224,202,0.05);
-  --text: #F1EADB; --muted: #8E9AAB; --success: #7FB89A; --danger: #D98A87;
-  --lime: #EBE0CA; --lime-soft: #F3EBD9; --on-lime: #011121; --accent-text: #EBE0CA;
-  --overlay: rgba(0,6,14,0.75); --scroll: rgba(235,224,202,0.18); color-scheme: dark;
+  --bg: #0A1A20; --surface: #102830; --surface2: #17353F; --sidebar: #08151A;
+  --border: rgba(228,238,241,0.10); --border-strong: rgba(228,238,241,0.30); --hover: rgba(228,238,241,0.05);
+  --text: #E4EEF1; --muted: #8FA6AE; --success: #6FC4A0; --danger: #E08A87;
+  --lime: #5FB4C4; --lime-soft: #7CC6D4; --on-lime: #08222A; --accent-text: #7CC6D4;
+  --overlay: rgba(2,10,13,0.75); --scroll: rgba(228,238,241,0.18); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #011121; --surface: #051B31; --surface2: #0A2440; --sidebar: #010D1A;
-  --border: rgba(235,224,202,0.11); --border-strong: rgba(235,224,202,0.30); --hover: rgba(235,224,202,0.05);
-  --text: #F1EADB; --muted: #8E9AAB; --success: #7FB89A; --danger: #D98A87;
-  --lime: #EBE0CA; --lime-soft: #F3EBD9; --on-lime: #011121; --accent-text: #EBE0CA;
-  --overlay: rgba(0,6,14,0.75); --scroll: rgba(235,224,202,0.18); color-scheme: dark;
+  --bg: #0A1A20; --surface: #102830; --surface2: #17353F; --sidebar: #08151A;
+  --border: rgba(228,238,241,0.10); --border-strong: rgba(228,238,241,0.30); --hover: rgba(228,238,241,0.05);
+  --text: #E4EEF1; --muted: #8FA6AE; --success: #6FC4A0; --danger: #E08A87;
+  --lime: #5FB4C4; --lime-soft: #7CC6D4; --on-lime: #08222A; --accent-text: #7CC6D4;
+  --overlay: rgba(2,10,13,0.75); --scroll: rgba(228,238,241,0.18); color-scheme: dark;
 }
 /* Nomes semânticos (apelidos das variáveis acima) */
 :root { --background: var(--bg); --text-muted: var(--muted); --primary: var(--lime); --on-primary: var(--on-lime); --on-deep: var(--on-lime); --field: var(--surface2); --logo-ink: var(--text); }
@@ -49,7 +49,7 @@ a { color: inherit; text-decoration: none; }
   transition: background .15s ease, color .15s ease;
 }
 .nav-item:hover { background: var(--surface2); color: var(--text); }
-.nav-item.active { background: var(--lime); color: var(--on-lime); font-weight: 600; }
+.nav-item.active { background: var(--surface2); color: var(--accent-text); font-weight: 600; }
 .nav-section { font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px; margin: 16px 6px 8px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .tag-soon { font-size: 9px; font-weight: 800; letter-spacing: .06em; padding: 2px 7px; border-radius: 999px; background: var(--lime); color: var(--on-lime); }
 .nav-section i { flex: 1; height: 1px; background: var(--border); }
