@@ -9,7 +9,7 @@ html, body { padding: 0; margin: 0; }
   --text: #0A0F24; --muted: #5F6785; --success: #1E9E6A; --danger: #DC4540;
   --lime: #0056FF; --lime-soft: #2277FF; --on-lime: #FFFFFF; --accent-text: #0056FF;
   --grad: linear-gradient(135deg, #0056FF 0%, #2277FF 55%, #5C98FF 100%);
-  --nav-on-bg: linear-gradient(120deg, #0056FF 0%, #2277FF 45%, #8DB5FF 100%); --nav-on-fg: #FFFFFF; --nav-shadow: 0 6px 16px rgba(0,86,255,0.32);
+  --nav-on-bg: linear-gradient(120deg, #297CFF 0%, #98BFFE 100%); --nav-on-fg: #FFFFFF; --nav-shadow: 0 6px 16px rgba(0,86,255,0.32);
   --overlay: rgba(0,6,30,0.5); --scroll: rgba(0,40,140,0.25); color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
