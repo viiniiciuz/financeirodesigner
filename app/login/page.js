@@ -70,8 +70,8 @@ export default function LoginPage() {
     <div style={{ minHeight: "100vh", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", padding: 16 }}>
       <div style={{ position: "absolute", top: 16, right: 16 }}><ThemeToggle /></div>
       <Card style={{ padding: 32, width: 400, maxWidth: "100%", boxShadow: "none" }}>
-        <img className="logo-dark" src="/logo.png" alt="Zentrix Flow" style={{ height: 46, marginBottom: 20 }} />
-        <img className="logo-light" src="/logo-light.png" alt="Zentrix Flow" style={{ height: 46, marginBottom: 20 }} />
+        <img className="logo-dark" src="/logo-horizontal-dark.svg" alt="Zentrix Flow" style={{ height: 38, width: "auto", marginBottom: 22 }} />
+        <img className="logo-light" src="/logo-horizontal-light.svg" alt="Zentrix Flow" style={{ height: 38, width: "auto", marginBottom: 22 }} />
         <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 4 }}>{mode === "login" ? "Entrar" : "Criar conta"}</div>
         <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20 }}>Financeiro, demandas e contratos para quem presta serviço</div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
