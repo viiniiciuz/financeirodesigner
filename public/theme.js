@@ -2,7 +2,7 @@
    Arquivo externo (sem JavaScript inline), carregado no <head> antes da pintura da página. */
 (function () {
   var KEY = "zf-theme";
-  var COR = { dark: "#0A1A20", light: "#E6EEF1" }; // mesma cor do fundo do app em cada tema
+  var COR = { dark: "#050A1C", light: "#E3E7FC" }; // mesma cor do fundo do app em cada tema
   var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
   function lerPref() {

@@ -8,14 +8,14 @@ export function GET() {
     description: "Financeiro, demandas e contratos para quem presta serviço",
     start_url: "/dashboard",
     display: "standalone",
-    background_color: "#1D6A7B",
-    theme_color: "#1D6A7B",
+    background_color: "#0056FF",
+    theme_color: "#0056FF",
     scope: "/",
     lang: "pt-BR",
     icons: [
-      { src: "/icons/app-192.png?v=2", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icons/app-512.png?v=2", sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: "/icons/maskable-512.png?v=2", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      { src: "/icons/app-192.png?v=3", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/app-512.png?v=3", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icons/maskable-512.png?v=3", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 

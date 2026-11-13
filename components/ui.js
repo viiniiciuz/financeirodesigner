@@ -50,7 +50,7 @@ export function Button({ children, variant = "primary", onClick, style, type = "
     padding: size === "sm" ? "6px 12px" : "9px 16px", fontSize: size === "sm" ? 12.5 : 13.5,
   };
   const variants = {
-    primary: { background: "var(--lime)", color: "var(--on-lime)" },
+    primary: { background: "var(--grad)", color: "var(--on-lime)" },
     secondary: { background: "var(--surface2)", color: "var(--text)", border: "1px solid var(--border)" },
     ghost: { background: "transparent", color: "var(--muted)" },
     danger: { background: "rgba(217,138,135,0.12)", color: "var(--danger)", border: "1px solid rgba(217,138,135,0.35)" },
@@ -126,7 +126,7 @@ export function Modal({ title, onClose, children, width = 640 }) {
 export function ProgressBar({ pct, color }) {
   return (
     <div style={{ height: 7, borderRadius: 99, background: "var(--surface2)", overflow: "hidden" }}>
-      <div style={{ height: "100%", width: `${pct}%`, background: color || "var(--lime)", borderRadius: 99, transition: "width .3s ease" }} />
+      <div style={{ height: "100%", width: `${pct}%`, background: color || "var(--grad)", borderRadius: 99, transition: "width .3s ease" }} />
     </div>
   );
 }
