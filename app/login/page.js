@@ -4,6 +4,15 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { Button, Input, Field, Card, ThemeToggle } from "@/components/ui";
 
+// Mensagens claras sem revelar se o e-mail existe
+function mensagemLogin(error) {
+  const m = String(error?.message || "").toLowerCase();
+  if (m.includes("captcha")) return "Falha na verificação de segurança. Recarregue a página e tente de novo.";
+  if (error?.status === 429 || m.includes("rate limit") || m.includes("too many")) return "Muitas tentativas. Aguarde alguns minutos e tente de novo.";
+  if (m.includes("not confirmed")) return "Confirme seu e-mail antes de entrar.";
+  return "E-mail ou senha incorretos.";
+}
+
 export default function LoginPage() {
   const [mode, setMode] = useState("login"); // login | signup
   const [email, setEmail] = useState("");
@@ -56,7 +65,7 @@ export default function LoginPage() {
     const options = SITE_KEY ? { captchaToken: captcha } : undefined;
     if (mode === "login") {
       const { error } = await supabase.auth.signInWithPassword({ email, password, options });
-      if (error) setError("E-mail ou senha incorretos."); else router.replace("/dashboard");
+      if (error) setError(mensagemLogin(error)); else router.replace("/dashboard");
     } else {
       const { error } = await supabase.auth.signUp({ email, password, options });
       if (error) setError("Não foi possível criar a conta. Verifique os dados e tente de novo.");
@@ -76,7 +85,7 @@ export default function LoginPage() {
         <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20 }}>Financeiro, demandas e contratos para quem presta serviço</div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Field label="E-mail"><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
-          <Field label="Senha"><Input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+          <Field label="Senha"><Input type="password" required minLength={mode === "signup" ? 8 : undefined} value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
           {SITE_KEY && <div ref={boxRef} />}
           {error && <div style={{ color: "#D98A87", fontSize: 12.5 }}>{error}</div>}
           {msg && <div style={{ color: "#7FB89A", fontSize: 12.5 }}>{msg}</div>}
