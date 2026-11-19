@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { Card, EmptyState, Tag, Badge, Button } from "@/components/ui";
 import CobrancaModal from "@/components/CobrancaModal";
-import { STATUS_FIN, toBRL, toBRDate, statusFinanceiroEmpresa, statusFinanceiroFreela, sumPagamentos } from "@/lib/helpers";
+import { STATUS_FIN, toBRL, toBRDate, statusFinanceiroEmpresa, statusFinanceiroFreela, sumPagamentos, urlSegura } from "@/lib/helpers";
 
 export default function PagamentosPage() {
   const { userId } = useAuth();
@@ -115,8 +115,8 @@ export default function PagamentosPage() {
                     <td data-label="Forma">{r.forma}</td>
                     <td data-label="Status"><Badge color={STATUS_FIN[r.status].color} bg={STATUS_FIN[r.status].bg}>{STATUS_FIN[r.status].label}</Badge></td>
                     <td data-label="Arquivos" style={{ display: "flex", gap: 8 }}>
-                      {r.comprovante && <a href={r.comprovante} target="_blank" rel="noreferrer" style={{ color: "var(--muted)" }} title="Comprovante"><Paperclip size={14} /></a>}
-                      {r.nf && <a href={r.nf} target="_blank" rel="noreferrer" style={{ color: "var(--muted)" }} title="Nota fiscal"><FileText size={14} /></a>}
+                      {r.comprovante && <a href={urlSegura(r.comprovante)} target="_blank" rel="noreferrer" style={{ color: "var(--muted)" }} title="Comprovante"><Paperclip size={14} /></a>}
+                      {r.nf && <a href={urlSegura(r.nf)} target="_blank" rel="noreferrer" style={{ color: "var(--muted)" }} title="Nota fiscal"><FileText size={14} /></a>}
                     </td>
                   </tr>
                 ))}

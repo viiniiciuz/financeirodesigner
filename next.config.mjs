@@ -1,36 +1,27 @@
-const supa = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supaHost = supa ? new URL(supa).origin : "https://*.supabase.co";
-
-const csp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: " + supaHost,
-  "font-src 'self' data:",
-  `connect-src 'self' ${supaHost} wss://${supaHost.replace(/^https?:\/\//, "")} https://challenges.cloudflare.com`,
-  "frame-src 'self' https://challenges.cloudflare.com " + supaHost,
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-].join("; ");
-
 /** @type {import('next').NextConfig} */
+const seguranca = [
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+];
+
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  productionBrowserSourceMaps: false,
   async headers() {
-    return [{
-      source: "/:path*",
-      headers: [
-        { key: "Content-Security-Policy", value: csp },
-        { key: "X-Frame-Options", value: "DENY" },
-        { key: "X-Content-Type-Options", value: "nosniff" },
-        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-        { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
-        { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
-      ],
-    }];
+    return [
+      // Todas as rotas: cabeçalhos de segurança (a CSP com nonce vem do proxy.js)
+      { source: "/:path*", headers: seguranca },
+      // Páginas do app: nunca guardar em cache compartilhado/CDN
+      {
+        source: "/((?!_next/static|_next/image|icons/|fonts/|logo-horizontal|theme\\.js).*)",
+        headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }],
+      },
+    ];
   },
 };
 

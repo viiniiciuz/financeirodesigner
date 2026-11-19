@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { X, Upload, Paperclip, Eye, Trash2, Sun, Moon, Monitor } from "lucide-react";
 import { usePref } from "@/lib/theme";
-import { formatCentsToBR } from "@/lib/helpers";
+import { formatCentsToBR, urlSegura } from "@/lib/helpers";
 
 export function Badge({ color, bg, children }) {
   return (
@@ -155,7 +155,7 @@ export function FileField({ label, fileUrl, fileName, onUpload, onRemove, upload
         <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 12, padding: "7px 10px" }}>
           <Paperclip size={13} style={{ color: "var(--muted)" }} />
           <span style={{ fontSize: 12.5, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{fileName || "arquivo"}</span>
-          <a href={fileUrl} target="_blank" rel="noreferrer" title="Visualizar" style={{ color: "var(--muted)" }}><Eye size={14} /></a>
+          <a href={urlSegura(fileUrl)} target="_blank" rel="noreferrer" title="Visualizar" style={{ color: "var(--muted)" }}><Eye size={14} /></a>
           <button onClick={onRemove} title="Excluir" style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer" }}><Trash2 size={14} /></button>
         </div>
       )}

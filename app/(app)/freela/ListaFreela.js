@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { uploadArquivo, removeArquivo } from "@/lib/storage";
 import { Button, Card, EmptyState, IconBtn, Badge, Modal, Field, Input, Select, TextArea, CurrencyInput, StatCard, FileField } from "@/components/ui";
-import { SERVICO_TIPOS, FORMAS_PAGAMENTO, STATUS_TRABALHO, STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, limparVazios } from "@/lib/helpers";
+import { SERVICO_TIPOS, FORMAS_PAGAMENTO, STATUS_TRABALHO, STATUS_FIN, toBRL, toBRDate, todayISO, sumPagamentos, statusFinanceiroFreela, limparVazios, urlSegura } from "@/lib/helpers";
 
 export default function ListaFreela() {
   const { userId } = useAuth();
@@ -173,7 +173,7 @@ function PagamentosModal({ userId, item, pagamentos, onClose, onChange }) {
                 <div style={{ fontWeight: 600, fontSize: 13 }}>{toBRL(p.valor)} <span style={{ fontWeight: 400, color: "var(--muted)" }}>· {p.forma}</span></div>
                 <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{toBRDate(p.data)} {p.descricao && `· ${p.descricao}`}</div>
               </div>
-              {p.comprovante_url && <a href={p.comprovante_url} target="_blank" rel="noreferrer" style={{ color: "var(--muted)", marginRight: 8 }}><Paperclip size={14} /></a>}
+              {p.comprovante_url && <a href={urlSegura(p.comprovante_url)} target="_blank" rel="noreferrer" style={{ color: "var(--muted)", marginRight: 8 }}><Paperclip size={14} /></a>}
               <IconBtn icon={Trash2} danger title="Excluir" onClick={() => removePagamento(p)} />
             </div>
           ))}

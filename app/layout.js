@@ -18,11 +18,14 @@ export const metadata = {
 
 export const viewport = { colorScheme: "light dark" };
 
-export default function RootLayout({ children }) {
+import { headers } from "next/headers";
+
+export default async function RootLayout({ children }) {
+  const nonce = (await headers()).get("x-nonce") || undefined;
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
-        <script src="/theme.js" />
+        <script src="/theme.js" nonce={nonce} />
       </head>
       <body>{children}</body>
     </html>

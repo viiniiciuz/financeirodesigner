@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/useAuth";
 import { Button, Card, Field, Input, Select } from "@/components/ui";
 
 export default function ConfiguracoesPage() {
   const { userId } = useAuth();
+  const router = useRouter();
   const [f, setF] = useState({ nome: "", nome_profissional: "Designer Freelancer", telefone: "", email: "", moeda: "BRL" });
   const [loading, setLoading] = useState(true);
 
@@ -23,6 +25,12 @@ export default function ConfiguracoesPage() {
     const { error } = await supabase.from("config").upsert({ ...f, user_id: userId, updated_at: new Date().toISOString() });
     if (error) { alert("Não foi possível salvar. Tente novamente." + (error.message.includes("chave_pix") ? "\n\nRode o arquivo supabase/migracao-003.sql no Supabase." : "")); return; }
     alert("Configurações salvas!");
+  };
+
+  const sairTodos = async () => {
+    if (!confirm("Sair de todos os dispositivos? Você precisará entrar de novo em cada um.")) return;
+    await supabase.auth.signOut({ scope: "global" });
+    router.replace("/login");
   };
 
   if (loading) return <div style={{ color: "var(--muted)" }}>Carregando…</div>;
@@ -42,6 +50,11 @@ export default function ConfiguracoesPage() {
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 18 }}>
           <Button onClick={salvar}><Check size={14} /> Salvar configurações</Button>
         </div>
+      </Card>
+      <Card style={{ padding: 20, maxWidth: 560, marginTop: 14 }}>
+        <div style={{ fontWeight: 700, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}><ShieldCheck size={16} /> Segurança</div>
+        <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>Encerra sua sessão em todos os aparelhos e navegadores. Use se perdeu um dispositivo ou suspeita de acesso indevido.</div>
+        <Button variant="secondary" onClick={sairTodos}>Sair de todos os dispositivos</Button>
       </Card>
     </div>
   );
