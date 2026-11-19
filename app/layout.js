@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata = {
   title: "Zentrix Flow",
   description: "Financeiro, demandas e contratos para quem presta serviço",
-  manifest: "/manifest.webmanifest?v=5",
+  manifest: "/manifest.webmanifest?v=6",
   icons: {
     icon: [
       { url: "/icons/favicon-light.svg?v=4", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },

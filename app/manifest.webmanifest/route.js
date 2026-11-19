@@ -13,8 +13,8 @@ export function GET() {
     scope: "/",
     lang: "pt-BR",
     icons: [
-      { src: "/icons/app-192.png?v=4", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icons/app-512.png?v=4", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icons/app-192-round.png?v=1", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/app-512-round.png?v=1", sizes: "512x512", type: "image/png", purpose: "any" },
       { src: "/icons/maskable-512.png?v=4", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
